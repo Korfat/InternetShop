@@ -18,7 +18,7 @@ import internetshop.service.impl.OrderServiceImpl;
 import internetshop.service.impl.UserServiceImpl;
 
 public class Factory {
-    private static ItemDao itemDaoInstanse = new ItemDaoImpl();
+    private static ItemDao itemDaoInstanse;
     private static BucketDao bucketDaoInstanse;
     private static OrderDao orderDaoInstanse;
     private static UserDao userDaoInstanse;
