@@ -16,8 +16,18 @@ public class Bucket {
         items = new ArrayList<>();
     }
 
+    public Bucket(Long userId) {
+        this.id = BucketIdGenerator.getGeneratedId();
+        this.userId = userId;
+        items = new ArrayList<>();
+    }
+
     public void clearItems() {
         items.clear();
+    }
+
+    public void deleteItem(Long id) {
+        items.removeIf(s -> s.getId().equals(id));
     }
 
     public Long getId() {

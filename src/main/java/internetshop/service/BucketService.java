@@ -8,9 +8,13 @@ import java.util.List;
 public interface BucketService {
     Bucket addItem(Long bucketId, Long itemId);
 
+    Bucket deleteItem(Long bucketId, Long itemId);
+
     Bucket clear(Long bucketId);
 
     List<Item> getAllItems(Long bucketId);
+
+    Long getCurrent();
 
     Bucket create(Bucket bucket);
 

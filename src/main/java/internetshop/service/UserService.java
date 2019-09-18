@@ -11,6 +11,8 @@ public interface UserService {
 
     User get(Long id);
 
+    List<User> getAll();
+
     User update(User user);
 
     User delete(Long id);

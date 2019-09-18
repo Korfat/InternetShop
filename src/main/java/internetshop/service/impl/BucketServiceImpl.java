@@ -2,6 +2,7 @@ package internetshop.service.impl;
 
 import internetshop.dao.BucketDao;
 import internetshop.dao.ItemDao;
+import internetshop.idgenerator.BucketIdGenerator;
 import internetshop.lib.Inject;
 import internetshop.lib.Service;
 import internetshop.model.Bucket;
@@ -27,6 +28,13 @@ public class BucketServiceImpl implements BucketService {
     }
 
     @Override
+    public Bucket deleteItem(Long bucketId, Long itemId) {
+        Bucket bucket = bucketDao.get(bucketId);
+        bucket.deleteItem(itemId);
+        return bucketDao.update(bucket);
+    }
+
+    @Override
     public Bucket clear(Long bucketId) {
         Bucket bucket = bucketDao.get(bucketId);
         bucket.getItems().clear();
@@ -37,6 +45,11 @@ public class BucketServiceImpl implements BucketService {
     public List<Item> getAllItems(Long bucketId) {
         Bucket bucket = bucketDao.get(bucketId);
         return bucket.getItems();
+    }
+
+    @Override
+    public Long getCurrent() {
+        return BucketIdGenerator.getCurrent() - 1;
     }
 
     @Override
