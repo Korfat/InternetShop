@@ -12,7 +12,7 @@ public class Item {
         this.id = ItemIdGenerator.getGeneratedId();
     }
 
-    public Item(String name, Double price) {
+    public Item(String name, String model, Double price) {
         this.id = ItemIdGenerator.getGeneratedId();
         this.name = name;
         this.model = model;

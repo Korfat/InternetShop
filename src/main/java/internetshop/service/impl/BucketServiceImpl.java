@@ -2,7 +2,6 @@ package internetshop.service.impl;
 
 import internetshop.dao.BucketDao;
 import internetshop.dao.ItemDao;
-import internetshop.idgenerator.BucketIdGenerator;
 import internetshop.lib.Inject;
 import internetshop.lib.Service;
 import internetshop.model.Bucket;
@@ -48,11 +47,6 @@ public class BucketServiceImpl implements BucketService {
     }
 
     @Override
-    public Long getCurrent() {
-        return BucketIdGenerator.getCurrent() - 1;
-    }
-
-    @Override
     public Bucket create(Bucket bucket) {
         return bucketDao.create(bucket);
     }
@@ -60,6 +54,11 @@ public class BucketServiceImpl implements BucketService {
     @Override
     public Bucket get(Long id) {
         return bucketDao.get(id);
+    }
+
+    @Override
+    public Bucket getByUser(Long userId) {
+        return bucketDao.getByUser(userId);
     }
 
     @Override

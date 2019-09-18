@@ -14,11 +14,11 @@ public interface BucketService {
 
     List<Item> getAllItems(Long bucketId);
 
-    Long getCurrent();
-
     Bucket create(Bucket bucket);
 
     Bucket get(Long id);
+
+    Bucket getByUser(Long userId);
 
     Bucket update(Bucket bucket);
 

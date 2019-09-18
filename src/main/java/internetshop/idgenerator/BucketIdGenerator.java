@@ -7,10 +7,6 @@ public class BucketIdGenerator {
 
     }
 
-    public static Long getCurrent() {
-        return idGenerator;
-    }
-
     public static Long getGeneratedId() {
         return idGenerator++;
     }

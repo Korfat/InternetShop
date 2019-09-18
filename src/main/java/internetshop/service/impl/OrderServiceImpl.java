@@ -1,7 +1,6 @@
 package internetshop.service.impl;
 
 import internetshop.dao.OrderDao;
-import internetshop.dao.Storage;
 import internetshop.dao.UserDao;
 import internetshop.lib.Inject;
 import internetshop.lib.Service;
@@ -40,7 +39,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<Order> getAll() {
-        return Storage.orders;
+        return orderDao.getAll();
     }
 
     @Override

@@ -5,6 +5,7 @@ import internetshop.dao.UserDao;
 import internetshop.lib.Dao;
 import internetshop.model.User;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Dao
@@ -22,6 +23,11 @@ public class UserDaoImpl implements UserDao {
                 .filter(i -> i.getId().equals(id))
                 .findFirst()
                 .orElseThrow(() -> new NoSuchElementException("Can't find number with id " + id));
+    }
+
+    @Override
+    public List<User> getAll() {
+        return Storage.users;
     }
 
     @Override

@@ -1,11 +1,12 @@
 package internetshop.service;
 
+import internetshop.model.Order;
 import internetshop.model.User;
 
 import java.util.List;
 
 public interface UserService {
-    List getOrders(Long userId);
+    List<Order> getOrders(Long userId);
 
     User create(User user);
 
