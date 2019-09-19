@@ -38,6 +38,17 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public List<Order> getAll() {
+        return orderDao.getAll();
+    }
+
+    @Override
+    public List<Item> getAllItems(Long orderId) {
+        Order order = orderDao.get(orderId);
+        return order.getItems();
+    }
+
+    @Override
     public Order update(Order order) {
         return orderDao.update(order);
     }

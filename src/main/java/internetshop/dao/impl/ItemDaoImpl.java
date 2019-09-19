@@ -5,6 +5,7 @@ import internetshop.dao.Storage;
 import internetshop.lib.Dao;
 import internetshop.model.Item;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Dao
@@ -22,6 +23,11 @@ public class ItemDaoImpl implements ItemDao {
                 .filter(i -> i.getId().equals(id))
                 .findFirst()
                 .orElseThrow(() -> new NoSuchElementException("Can't find number with id " + id));
+    }
+
+    @Override
+    public List<Item> getAll() {
+        return Storage.items;
     }
 
     @Override

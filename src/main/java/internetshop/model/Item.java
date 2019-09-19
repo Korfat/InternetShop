@@ -5,11 +5,17 @@ import internetshop.idgenerator.ItemIdGenerator;
 public class Item {
     private Long id;
     private String name;
+    private String model;
     private Double price;
 
-    public Item(String name, Double price) {
+    public Item() {
+        this.id = ItemIdGenerator.getGeneratedId();
+    }
+
+    public Item(String name, String model, Double price) {
         this.id = ItemIdGenerator.getGeneratedId();
         this.name = name;
+        this.model = model;
         this.price = price;
     }
 
@@ -23,6 +29,14 @@ public class Item {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
     }
 
     public Double getPrice() {

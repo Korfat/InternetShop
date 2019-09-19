@@ -8,14 +8,21 @@ import java.util.List;
 public class User {
     private Long id;
     private String name;
+    private String surname;
+    private String login;
+    private String password;
     private List<Order> orders;
-    private Bucket bucket;
+    private Bucket bucket = new Bucket(this);
+
+    public User() {
+        this.id = UserIdGenerator.getGeneratedId();
+        orders = new ArrayList<>();
+    }
 
     public User(String name) {
         this.id = UserIdGenerator.getGeneratedId();
         orders = new ArrayList<>();
         this.name = name;
-        this.bucket = new Bucket(this);
     }
 
     public Long getId() {
@@ -48,5 +55,29 @@ public class User {
 
     public void setBucket(Bucket bucket) {
         this.bucket = bucket;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

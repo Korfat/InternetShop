@@ -7,6 +7,8 @@ public interface BucketDao {
 
     Bucket get(Long bucketId);
 
+    Bucket getByUser(Long userId);
+
     Bucket update(Bucket bucket);
 
     Bucket delete(Long id);
