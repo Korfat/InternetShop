@@ -35,17 +35,17 @@
                 <c:out value="${item.price}" />
             </td>
             <td>
-                <a href="/InternetShop_war_exploded/addItemToBucket?item_id=${item.id}">ADD</a>
+                <a href="/InternetShop_war_exploded/servlet/addItemToBucket?item_id=${item.id}">ADD</a>
             </td>
         </tr>
     </c:forEach>
 </table>
 <br>
-<a href="/InternetShop_war_exploded/addItem"><button type="submit" class="registerbtn">New Item</button></a>
+<a href="/InternetShop_war_exploded/servlet/addItem"><button type="submit" class="registerbtn">New Item</button></a>
 <br>
-<a href="/InternetShop_war_exploded/injectData"><button type="submit" class="registerbtn">Inject Data</button></a>
+<a href="/InternetShop_war_exploded/servlet/injectData"><button type="submit" class="registerbtn">Inject Data</button></a>
 <br>
-<a href="/InternetShop_war_exploded/bucket"><button type="submit" class="registerbtn">Bucket</button></a>
+<a href="/InternetShop_war_exploded/servlet/bucket"><button type="submit" class="registerbtn">Bucket</button></a>
 
 </body>
 </html>

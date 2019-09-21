@@ -8,9 +8,11 @@ import internetshop.service.UserService;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 public class RegistrationController extends HttpServlet {
     @Inject
@@ -22,7 +24,7 @@ public class RegistrationController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        req.getRequestDispatcher("WEB-INF/views/register.jsp").forward(req, resp);
+        req.getRequestDispatcher("/WEB-INF/views/register.jsp").forward(req, resp);
     }
 
     @Override
@@ -32,7 +34,7 @@ public class RegistrationController extends HttpServlet {
         if (req.getParameter("psw").equals(req.getParameter("psw-repeat"))) {
             newUser.setPassword(req.getParameter("psw-repeat"));
         } else {
-            req.getRequestDispatcher("WEB-INF/views/register.jsp").forward(req, resp);
+            req.getRequestDispatcher("/WEB-INF/views/register.jsp").forward(req, resp);
             return;
         }
         newUser.setLogin(req.getParameter("login"));
@@ -41,7 +43,14 @@ public class RegistrationController extends HttpServlet {
         Bucket newBucket = new Bucket(newUser);
         bucketService.create(newBucket);
         newUser.setBucket(newBucket);
-        userService.create(newUser);
-        resp.sendRedirect(req.getContextPath() + "/allItems");
+        User user = userService.create(newUser);
+
+        HttpSession session = req.getSession(true);
+        session.setAttribute("userId", user.getId());
+        session.setAttribute("bucketId", newBucket.getId());
+
+        Cookie cookie = new Cookie("Mate", user.getToken());
+        resp.addCookie(cookie);
+        resp.sendRedirect(req.getContextPath() + "/servlet/allItems");
     }
 }

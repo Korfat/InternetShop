@@ -21,6 +21,6 @@ public class GetItemsFromOrderController extends HttpServlet {
         String orderId = req.getParameter("order_id");
         List<Item> itemsInOrder = orderService.getAllItems(Long.valueOf(orderId));
         req.setAttribute("itemsInOrder", itemsInOrder);
-        req.getRequestDispatcher("WEB-INF/views/getOrder.jsp").forward(req, resp);
+        req.getRequestDispatcher("/WEB-INF/views/getOrder.jsp").forward(req, resp);
     }
 }

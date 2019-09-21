@@ -35,14 +35,14 @@ Items in bucket:
                 <c:out value="${item.price}" />
             </td>
             <td>
-                <a href="/InternetShop_war_exploded/deleteFromBucket?item_id=${item.id}">DEL</a>
+                <a href="/InternetShop_war_exploded/servlet/deleteFromBucket?item_id=${item.id}">DEL</a>
             </td>
         </tr>
     </c:forEach>
 </table>
 <br>
-<a href="/InternetShop_war_exploded/completeOrder"><button type="submit" class="registerbtn">Complete Order</button></a>
+<a href="/InternetShop_war_exploded/servlet/completeOrder"><button type="submit" class="registerbtn">Complete Order</button></a>
 <br>
-<a href="/InternetShop_war_exploded/allItems"><button type="submit" class="registerbtn">All Items</button></a>
+<a href="/InternetShop_war_exploded/servlet/allItems"><button type="submit" class="registerbtn">All Items</button></a>
 </body>
 </html>

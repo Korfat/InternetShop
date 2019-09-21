@@ -2,11 +2,13 @@ package internetshop.dao.impl;
 
 import internetshop.dao.Storage;
 import internetshop.dao.UserDao;
+import internetshop.exceptions.AuthenticationException;
 import internetshop.lib.Dao;
 import internetshop.model.User;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Dao
 public class UserDaoImpl implements UserDao {
@@ -52,5 +54,25 @@ public class UserDaoImpl implements UserDao {
     public User deleteByUser(User user) {
         Storage.users.removeIf(s -> s.equals(user));
         return user;
+    }
+
+    @Override
+    public User login(String login, String password) throws AuthenticationException {
+        Optional<User> user = Storage.users
+                .stream()
+                .filter(u -> u.getLogin().equals(login))
+                .findFirst();
+        if (user.isEmpty() || !user.get().getPassword().equals(password)) {
+            throw new AuthenticationException("Incorrect username or password");
+        }
+        return user.get();
+    }
+
+    @Override
+    public Optional<User> getByToken(String token) {
+        return Storage.users
+                .stream()
+                .filter(u -> u.getToken().equals(token))
+                .findFirst();
     }
 }

@@ -42,7 +42,7 @@ Users:
                 <c:out value="${user.surname}" />
             </td>
             <td>
-                <a href="/InternetShop_war_exploded/deleteUser?user_id=${user.id}">DELETE</a>
+                <a href="/InternetShop_war_exploded/servlet/deleteUser?user_id=${user.id}">DELETE</a>
             </td>
         </tr>
     </c:forEach>

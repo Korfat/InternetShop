@@ -15,14 +15,14 @@ public class GetBucketController extends HttpServlet {
     @Inject
     private static BucketService bucketService;
 
-    private static final Long USER_ID = 0L;
-
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
+        Long bucketId = (Long) req.getSession(true).getAttribute("bucketId");
+
         List<Item> itemsInBucket = bucketService
-                .getAllItems(bucketService.getByUser(USER_ID).getId());
+                .getAllItems(bucketId);
         req.setAttribute("itemsInBucket", itemsInBucket);
-        req.getRequestDispatcher("WEB-INF/views/bucket.jsp").forward(req, resp);
+        req.getRequestDispatcher("/WEB-INF/views/bucket.jsp").forward(req, resp);
     }
 }

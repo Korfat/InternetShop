@@ -11,6 +11,7 @@ public class User {
     private String surname;
     private String login;
     private String password;
+    private String token;
     private List<Order> orders;
     private Bucket bucket = new Bucket(this);
 
@@ -79,5 +80,13 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public String getToken() {
+        return token;
     }
 }
