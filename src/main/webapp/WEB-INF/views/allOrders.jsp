@@ -32,17 +32,17 @@
                 <c:out value="${order.userId}" />
             </td>
             <td>
-                <a href="/InternetShop_war_exploded/deleteOrder?order_id=${order.id}">DEL</a>
+                <a href="/InternetShop_war_exploded/servlet/deleteOrder?order_id=${order.id}">DEL</a>
             </td>
             <td>
-                <a href="/InternetShop_war_exploded/getItemsFromOrder?order_id=${order.id}">SHOW</a>
+                <a href="/InternetShop_war_exploded/servlet/getItemsFromOrder?order_id=${order.id}">SHOW</a>
             </td>
         </tr>
     </c:forEach>
 </table>
 
 <br>
-<a href="/InternetShop_war_exploded/allItems"><button type="submit" class="registerbtn">All Items</button></a>
+<a href="/InternetShop_war_exploded/servlet/allItems"><button type="submit" class="registerbtn">All Items</button></a>
 
 </body>
 </html>

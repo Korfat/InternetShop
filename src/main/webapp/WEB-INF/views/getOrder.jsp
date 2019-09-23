@@ -37,8 +37,8 @@ Items in order:
     </c:forEach>
 </table>
 <br>
-<a href="/InternetShop_war_exploded/allOrders"><button type="submit" class="registerbtn">All Orders</button></a>
+<a href="/InternetShop_war_exploded/servlet/allOrders"><button type="submit" class="registerbtn">All Orders</button></a>
 <br>
-<a href="/InternetShop_war_exploded/allItems"><button type="submit" class="registerbtn">All Items</button></a>
+<a href="/InternetShop_war_exploded/servlet/allItems"><button type="submit" class="registerbtn">All Items</button></a>
 </body>
 </html>

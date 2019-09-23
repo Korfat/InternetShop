@@ -15,7 +15,7 @@
 <body>
 Let's create a new user!
 
-<form action="/InternetShop_war_exploded/addItem" method="post">
+<form action="/InternetShop_war_exploded/servlet/addItem" method="post">
     <div class="container">
         <%--@declare id="user_surname"--%><%--@declare id="user_name"--%><%--@declare id="psw-repeat"--%><%--@declare id="psw"--%><%--@declare id="login"--%><%--@declare id="price"--%><%--@declare id="model"--%><%--@declare id="item_name"--%>
             <h2>Create item</h2>

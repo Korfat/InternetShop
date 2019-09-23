@@ -1,9 +1,11 @@
 package internetshop.service;
 
+import internetshop.exceptions.AuthenticationException;
 import internetshop.model.Order;
 import internetshop.model.User;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserService {
     List<Order> getOrders(Long userId);
@@ -19,4 +21,8 @@ public interface UserService {
     User delete(Long id);
 
     User deleteByUser(User user);
+
+    User login(String login, String password) throws AuthenticationException;
+
+    Optional<User> getByToken(String token);
 }

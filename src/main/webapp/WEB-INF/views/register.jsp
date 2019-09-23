@@ -44,6 +44,8 @@ Let's create a new user!
         <hr>
 
         <button type="submit" class="registerbtn">Register</button>
+        <p>Already have an account?
+            <a href="/InternetShop_war_exploded/login">Sign in</a></p>
     </div>
 </form>
 </body>

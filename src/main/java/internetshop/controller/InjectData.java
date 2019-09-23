@@ -32,6 +32,6 @@ public class InjectData extends HttpServlet {
         itemService.create(newItem1);
         itemService.create(newItem2);
         itemService.create(newItem3);
-        resp.sendRedirect(req.getContextPath() + "/allItems");
+        resp.sendRedirect(req.getContextPath() + "/servlet/allItems");
     }
 }
