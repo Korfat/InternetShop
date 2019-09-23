@@ -47,7 +47,6 @@ public class RegistrationController extends HttpServlet {
 
         HttpSession session = req.getSession(true);
         session.setAttribute("userId", user.getId());
-        session.setAttribute("bucketId", newBucket.getId());
 
         Cookie cookie = new Cookie("Mate", user.getToken());
         resp.addCookie(cookie);
