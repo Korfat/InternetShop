@@ -3,7 +3,9 @@ package internetshop.model;
 import internetshop.idgenerator.UserIdGenerator;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class User {
     private Long id;
@@ -14,6 +16,7 @@ public class User {
     private String token;
     private List<Order> orders;
     private Bucket bucket = new Bucket(this);
+    private Set<Role> roles = new HashSet<>();
 
     public User() {
         this.id = UserIdGenerator.getGeneratedId();
@@ -88,5 +91,17 @@ public class User {
 
     public String getToken() {
         return token;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    public void addRole(Role role) {
+        roles.add(role);
     }
 }

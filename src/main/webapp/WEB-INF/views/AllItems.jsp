@@ -43,7 +43,7 @@
 <br>
 <a href="/InternetShop_war_exploded/servlet/addItem"><button type="submit" class="registerbtn">New Item</button></a>
 <br>
-<a href="/InternetShop_war_exploded/servlet/injectData"><button type="submit" class="registerbtn">Inject Data</button></a>
+<a href="/InternetShop_war_exploded/injectData"><button type="submit" class="registerbtn">Inject Data</button></a>
 <br>
 <a href="/InternetShop_war_exploded/servlet/bucket"><button type="submit" class="registerbtn">Bucket</button></a>
 
