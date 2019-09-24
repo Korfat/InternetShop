@@ -146,7 +146,7 @@
         <servlet-name>logoutController</servlet-name>
         <url-pattern>/logout</url-pattern>
     </servlet-mapping>
-
+    
     <filter>
         <filter-name>auth-filter</filter-name>
         <filter-class>internetshop.web.filters.AuthentikationFilter</filter-class>

@@ -1,5 +1,8 @@
 package internetshop.web.filters;
 
+import static internetshop.model.Role.RoleName.ADMIN;
+import static internetshop.model.Role.RoleName.USER;
+
 import internetshop.lib.Inject;
 import internetshop.model.Role;
 import internetshop.model.User;
@@ -21,8 +24,6 @@ import javax.servlet.http.HttpServletResponse;
 
 public class AuthorizationFilter implements Filter {
     private static final String EMPTY_STRING = "";
-    private static final Role.RoleName ADMIN = Role.RoleName.ADMIN;
-    private static final Role.RoleName USER = Role.RoleName.USER;
 
     @Inject
     private static UserService userService;

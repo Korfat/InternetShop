@@ -14,6 +14,8 @@ public class LogoutController extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = req.getSession(true);
         session.setAttribute("userId", null);
+        session.invalidate();
+        session = null;
 
         for (Cookie cookie : req.getCookies()) {
             if (cookie.getName().equals("Mate")) {
