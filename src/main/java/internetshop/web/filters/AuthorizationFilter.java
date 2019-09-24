@@ -1,8 +1,5 @@
 package internetshop.web.filters;
 
-import static internetshop.model.Role.RoleName.ADMIN;
-import static internetshop.model.Role.RoleName.USER;
-
 import internetshop.lib.Inject;
 import internetshop.model.Role;
 import internetshop.model.User;
@@ -21,6 +18,9 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import static internetshop.model.Role.RoleName.ADMIN;
+import static internetshop.model.Role.RoleName.USER;
 
 public class AuthorizationFilter implements Filter {
     private static final String EMPTY_STRING = "";
