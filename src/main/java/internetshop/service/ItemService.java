@@ -13,7 +13,7 @@ public interface ItemService {
 
     Item update(Item item);
 
-    Item delete(Long id);
+    void delete(Long id);
 
     Item deleteByItem(Item item);
 }

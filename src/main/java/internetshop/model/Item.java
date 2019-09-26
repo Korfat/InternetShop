@@ -8,6 +8,10 @@ public class Item {
     private String model;
     private Double price;
 
+    public Item(Long id) {
+        this.id = id;
+    }
+
     public Item() {
         this.id = ItemIdGenerator.getGeneratedId();
     }
