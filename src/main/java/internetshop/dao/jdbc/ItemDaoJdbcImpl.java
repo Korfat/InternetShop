@@ -28,22 +28,26 @@ public class ItemDaoJdbcImpl extends AbstractDao<Item> implements ItemDao {
     public Item create(Item item) {
         Statement stmt = null;
         String query = String.format("INSERT INTO %s.items (name, model, price)"
-                        + " VALUES ('%s', '%s', %.2f) ;", DB_NAME, item.getName(),
+                        + " VALUES ('%s', '%s', '%.2f') ;", DB_NAME, item.getName(),
                 item.getModel(), item.getPrice());
         try {
             stmt = connection.createStatement();
-            stmt.executeUpdate(query);
-            return item;
+            stmt.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);
         } catch (SQLException e) {
             logger.warn("Can't create item");
-        } finally {
-            if (stmt != null) {
-                try {
-                    stmt.close();
-                } catch (SQLException e) {
-                    logger.warn("Can't close statement", e);
-                }
+        }
+        Long itemId = null;
+        try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+            if (generatedKeys.next()) {
+                itemId = generatedKeys.getLong(1);
+                item.setId(itemId);
+                return item;
             }
+            else {
+                throw new SQLException("Creating user failed, no ID obtained.");
+            }
+        } catch (SQLException e) {
+            logger.warn("Can't get item");
         }
         return null;
     }
