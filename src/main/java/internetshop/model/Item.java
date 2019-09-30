@@ -8,6 +8,10 @@ public class Item {
     private String model;
     private Double price;
 
+    public Item(Long id) {
+        this.id = id;
+    }
+
     public Item() {
         this.id = ItemIdGenerator.getGeneratedId();
     }
@@ -21,6 +25,10 @@ public class Item {
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
