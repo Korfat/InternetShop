@@ -5,19 +5,20 @@ import internetshop.lib.Dao;
 import internetshop.model.Item;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 import org.apache.log4j.Logger;
 
 @Dao
 public class ItemDaoJdbcImpl extends AbstractDao<Item> implements ItemDao {
     private static Logger logger = Logger.getLogger(ItemDaoJdbcImpl.class);
-    private static String DB_NAME = "internetshop";
 
     public ItemDaoJdbcImpl(Connection connection) {
         super(connection);
@@ -25,145 +26,112 @@ public class ItemDaoJdbcImpl extends AbstractDao<Item> implements ItemDao {
     }
 
     @Override
-    public Item create(Item item) {
-        Statement stmt = null;
-        String query = String.format("INSERT INTO %s.items (name, model, price)"
-                        + " VALUES ('%s', '%s', '%.2f') ;", DB_NAME, item.getName(),
-                item.getModel(), item.getPrice());
-        try {
-            stmt = connection.createStatement();
-            stmt.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);
-        } catch (SQLException e) {
-            logger.warn("Can't create item");
-        }
-        Long itemId = null;
-        try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
-            if (generatedKeys.next()) {
-                itemId = generatedKeys.getLong(1);
-                item.setId(itemId);
-                return item;
-            }
-            else {
-                throw new SQLException("Creating user failed, no ID obtained.");
+    public Optional<Item> create(Item item) {
+        String query = "INSERT INTO items (name, model, price)"
+                + " VALUES (?, ?, ?);";
+        try (PreparedStatement preparedStatement
+                     = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+            preparedStatement.setString(1, item.getName());
+            preparedStatement.setString(2, item.getModel());
+            preparedStatement.setDouble(3, item.getPrice());
+            preparedStatement.executeUpdate();
+            try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    item.setId(generatedKeys.getLong(1));
+                    return Optional.of(item);
+                } else {
+                    throw new SQLException("Creating order failed, no ID obtained.");
+                }
             }
         } catch (SQLException e) {
-            logger.warn("Can't get item");
+            logger.error("Can't create order");
         }
-        return null;
+        return Optional.empty();
     }
 
     @Override
-    public Item get(Long id) {
-        Statement stmt = null;
-        String query = String.format("SELECT * FROM %s.items where item_id = %d ;", DB_NAME, id);
-        try {
-            stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery(query);
-            while (rs.next()) {
-                long itemId = rs.getLong("item_id");
-                String name = rs.getString("name");
-                String model = rs.getString("model");
-                double price = rs.getDouble("price");
-                Item item = new Item(itemId);
+    public Optional<Item> get(Long id) {
+        String query = "SELECT * FROM items WHERE item_id = ?;";
+        Item item = new Item();
+        try (PreparedStatement preparedStatement
+                     = connection.prepareStatement(query)) {
+            preparedStatement.setLong(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                Long itemId = resultSet.getLong("item_id");
+                String name = resultSet.getString("name");
+                String model = resultSet.getString("model");
+                Double price = resultSet.getDouble("price");
+                item.setId(itemId);
                 item.setName(name);
                 item.setModel(model);
                 item.setPrice(price);
-                return item;
             }
+            return Optional.of(item);
         } catch (SQLException e) {
-            logger.warn("Can't get item by id=" + id);
-        } finally {
-            if (stmt != null) {
-                try {
-                    stmt.close();
-                } catch (SQLException e) {
-                    logger.warn("Can't close statement", e);
-                }
-            }
+            logger.error("Can't get order");
         }
-        return null;
+        return Optional.empty();
     }
 
     @Override
-    public List<Item> getAll() {
+    public Optional<List<Item>> getAll() {
         List<Item> items = new ArrayList<>();
-        Statement stmt = null;
-        String query = String.format("SELECT * FROM %s.items ;", DB_NAME);
-        try {
-            stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery(query);
-            while (rs.next()) {
-                long itemId = rs.getLong("item_id");
-                String name = rs.getString("name");
-                String model = rs.getString("model");
-                double price = rs.getDouble("price");
-                Item item = new Item(itemId);
+        String query = "SELECT * FROM items;";
+        try (PreparedStatement preparedStatement
+                     = connection.prepareStatement(query)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                Long itemId = resultSet.getLong("item_id");
+                String name = resultSet.getString("name");
+                String model = resultSet.getString("model");
+                Double price = resultSet.getDouble("price");
+                Item item = new Item();
+                item.setId(itemId);
                 item.setName(name);
                 item.setModel(model);
                 item.setPrice(price);
                 items.add(item);
             }
-            return items;
+            return Optional.of(items);
         } catch (SQLException e) {
-            logger.warn("Can't get all items");
-        } finally {
-            if (stmt != null) {
-                try {
-                    stmt.close();
-                } catch (SQLException e) {
-                    logger.warn("Can't close statement", e);
-                }
-            }
+            logger.error("Can't get order");
         }
-        return null;
+        return Optional.empty();
     }
 
     @Override
-    public Item update(Item item) {
-        Statement stmt = null;
-        String query = String.format("UPDATE %s.items SET name = '%s', model = '%s',"
-                        + " price = '%.2f' WHERE item_id = %d ;", DB_NAME, item.getName(),
-                item.getModel(), item.getPrice(), item.getId());
-        try {
-            stmt = connection.createStatement();
-            stmt.executeUpdate(query);
-            return item;
+    public Optional<Item> update(Item item) {
+        String query = "UPDATE items SET name = ?, model = ?, price = ?"
+                + " WHERE item_id = ?;";
+        try (PreparedStatement preparedStatement
+                     = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, item.getName());
+            preparedStatement.setString(2, item.getModel());
+            preparedStatement.setDouble(3, item.getPrice());
+            preparedStatement.setLong(5, item.getId());
+            preparedStatement.executeUpdate();
+            return Optional.of(item);
         } catch (SQLException e) {
-            logger.warn("Can't update item");
-        } finally {
-            if (stmt != null) {
-                try {
-                    stmt.close();
-                } catch (SQLException e) {
-                    logger.warn("Can't close statement", e);
-                }
-            }
+            logger.error("Can't update order");
         }
-        return null;
+        return Optional.empty();
     }
 
     @Override
     public void delete(Long id) {
-        Statement stmt = null;
-        String query = String.format("DELETE FROM %s.items where item_id = %d ;", DB_NAME, id);
-        try {
-            stmt = connection.createStatement();
-            stmt.executeUpdate(query);
+        String query = "DELETE FROM items WHERE item_id = ?;";
+        try (PreparedStatement preparedStatement
+                     = connection.prepareStatement(query)) {
+            preparedStatement.setLong(1, id);
+            preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            logger.warn("Can't update item");
-        } finally {
-            if (stmt != null) {
-                try {
-                    stmt.close();
-                } catch (SQLException e) {
-                    logger.warn("Can't close statement", e);
-                }
-            }
+            logger.error("Can't delete user");
         }
     }
 
     @Override
-    public Item deleteByItem(Item item) {
-        return null;
+    public Optional<Item> deleteByItem(Item item) {
+        return Optional.empty();
     }
 }

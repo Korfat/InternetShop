@@ -6,56 +6,60 @@ import internetshop.lib.Dao;
 import internetshop.model.Bucket;
 
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Dao
 public class BucketDaoImpl implements BucketDao {
     @Override
-    public Bucket create(Bucket bucket) {
+    public Optional<Bucket> create(Bucket bucket) {
         Storage.buckets.add(bucket);
-        return bucket;
+        return Optional.ofNullable(bucket);
     }
 
     @Override
-    public Bucket get(Long bucketId) {
+    public Optional<Bucket> get(Long bucketId) {
         return Storage.buckets
                 .stream()
                 .filter(i -> i.getId().equals(bucketId))
-                .findFirst()
-                .orElseThrow(() ->
-                        new NoSuchElementException("Can't find bucket with id " + bucketId));
+                .findFirst();
     }
 
     @Override
-    public Bucket getByUser(Long userId) {
+    public Optional<Bucket> getByUser(Long userId) {
         return Storage.buckets
                 .stream()
                 .filter(i -> i.getUserId().equals(userId))
-                .findFirst()
-                .orElseThrow(() ->
-                        new NoSuchElementException("Can't find bucket with id " + userId));
+                .findFirst();
     }
 
     @Override
-    public Bucket update(Bucket bucket) {
+    public Optional<Bucket> update(Bucket bucket) {
         for (int i = 0; i < Storage.buckets.size(); i++) {
             if (Storage.buckets.get(i).getId().equals(bucket.getId())) {
                 Storage.buckets.set(i, bucket);
-                return bucket;
+                return Optional.of(bucket);
             }
         }
         throw new NoSuchElementException("Can't find item" + bucket.getId());
     }
 
     @Override
-    public Bucket delete(Long id) {
-        Bucket bucket = get(id);
+    public void delete(Long id) {
         Storage.buckets.removeIf(s -> s.getId().equals(id));
-        return bucket;
     }
 
     @Override
-    public Bucket deleteByBucket(Bucket bucket) {
-        Storage.buckets.removeIf(s -> s.equals(bucket));
-        return bucket;
+    public Optional<Bucket> addItem(Long bucketId, Long itemId) {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<Bucket> deleteItem(Long bucketId, Long itemId) {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<Bucket> clear(Long bucketId) {
+        return Optional.empty();
     }
 }

@@ -20,7 +20,7 @@ public class GetBucketController extends HttpServlet {
             throws ServletException, IOException {
         Long userId = (Long) req.getSession(true).getAttribute("userId");
         List<Item> itemsInBucket = bucketService
-                .getAllItems(bucketService.getByUser(userId).getId());
+                .getAllItems(bucketService.getByUser(userId).get().getId()).get();
         req.setAttribute("itemsInBucket", itemsInBucket);
         req.getRequestDispatcher("/WEB-INF/views/bucket.jsp").forward(req, resp);
     }

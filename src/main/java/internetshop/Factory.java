@@ -4,10 +4,10 @@ import internetshop.dao.BucketDao;
 import internetshop.dao.ItemDao;
 import internetshop.dao.OrderDao;
 import internetshop.dao.UserDao;
-import internetshop.dao.impl.BucketDaoImpl;
-import internetshop.dao.impl.OrderDaoImpl;
-import internetshop.dao.impl.UserDaoImpl;
+import internetshop.dao.jdbc.BucketDaoJdbcImpl;
 import internetshop.dao.jdbc.ItemDaoJdbcImpl;
+import internetshop.dao.jdbc.OrderDaoJdbcImpl;
+import internetshop.dao.jdbc.UserDaoJdbcImpl;
 import internetshop.service.BucketService;
 import internetshop.service.ItemService;
 import internetshop.service.OrderService;
@@ -83,21 +83,21 @@ public class Factory {
 
     public static BucketDao getBucketDao() {
         if (bucketDaoInstanse == null) {
-            bucketDaoInstanse = new BucketDaoImpl();
+            bucketDaoInstanse = new BucketDaoJdbcImpl(connection);
         }
         return bucketDaoInstanse;
     }
 
     public static OrderDao getOrderDao() {
         if (orderDaoInstanse == null) {
-            orderDaoInstanse = new OrderDaoImpl();
+            orderDaoInstanse = new OrderDaoJdbcImpl(connection);
         }
         return orderDaoInstanse;
     }
 
     public static UserDao getUserDao() {
         if (userDaoInstanse == null) {
-            userDaoInstanse = new UserDaoImpl();
+            userDaoInstanse = new UserDaoJdbcImpl(connection);
         }
         return userDaoInstanse;
     }

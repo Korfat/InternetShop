@@ -28,11 +28,11 @@ public class CompleteOrderController extends HttpServlet {
             throws ServletException, IOException {
         Long userId = (Long) req.getSession(true).getAttribute("userId");
         List<Item> items = new ArrayList<>(bucketService
-                .getAllItems(bucketService.getByUser(userId).getId()));
+                .getAllItems(bucketService.getByUser(userId).get().getId()).get());
         Order order = new Order(userId, items);
         orderService.create(order);
-        userService.get(userId).getOrders().add(order);
-        bucketService.clear(bucketService.getByUser(userId).getId());
+        userService.get(userId).get().getOrders().add(order);
+        bucketService.clear(bucketService.getByUser(userId).get().getId());
         req.setAttribute("items", items);
         req.getRequestDispatcher("/WEB-INF/views/completeOrder.jsp").forward(req, resp);
     }

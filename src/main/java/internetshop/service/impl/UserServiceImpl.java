@@ -18,12 +18,12 @@ public class UserServiceImpl implements UserService {
     private static UserDao userDao;
 
     @Override
-    public List<Order> getOrders(Long userId) {
-        return userDao.get(userId).getOrders();
+    public Optional<List<Order>> getOrders(Long userId) {
+        return userDao.getOrders(userId);
     }
 
     @Override
-    public User create(User user) {
+    public Optional<User> create(User user) {
         user.setToken(getToken());
         return userDao.create(user);
     }
@@ -33,32 +33,27 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User get(Long id) {
+    public Optional<User> get(Long id) {
         return userDao.get(id);
     }
 
     @Override
-    public List<User> getAll() {
+    public Optional<List<User>> getAll() {
         return userDao.getAll();
     }
 
     @Override
-    public User update(User user) {
+    public Optional<User> update(User user) {
         return userDao.update(user);
     }
 
     @Override
-    public User delete(Long id) {
-        return userDao.delete(id);
+    public void delete(Long id) {
+        userDao.delete(id);
     }
 
     @Override
-    public User deleteByUser(User user) {
-        return userDao.deleteByUser(user);
-    }
-
-    @Override
-    public User login(String login, String password) throws AuthenticationException {
+    public Optional<User> login(String login, String password) throws AuthenticationException {
         return userDao.login(login, password);
     }
 

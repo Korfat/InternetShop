@@ -1,7 +1,6 @@
 package internetshop.service.impl;
 
 import internetshop.dao.OrderDao;
-import internetshop.dao.UserDao;
 import internetshop.lib.Inject;
 import internetshop.lib.Service;
 import internetshop.model.Item;
@@ -9,57 +8,53 @@ import internetshop.model.Order;
 import internetshop.service.OrderService;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class OrderServiceImpl implements OrderService {
     @Inject
     private static OrderDao orderDao;
 
-    @Inject
-    private static UserDao userDao;
-
     @Override
-    public Order completeOrder(List<Item> items, Long userId) {
+    public Optional<Order> completeOrder(List<Item> items, Long userId) {
         Order order = new Order(userId, items);
         orderDao.create(order);
-        userDao.get(userId).getOrders().add(order);
-        userDao.get(userId).getBucket().clearItems();
-        return order;
+        return Optional.of(order);
     }
 
     @Override
-    public Order create(Order order) {
+    public Optional<Order> create(Order order) {
         return orderDao.create(order);
     }
 
     @Override
-    public Order get(Long id) {
+    public Optional<Order> get(Long id) {
         return orderDao.get(id);
     }
 
     @Override
-    public List<Order> getAll() {
+    public Optional<List<Order>> getAll() {
         return orderDao.getAll();
     }
 
     @Override
-    public List<Item> getAllItems(Long orderId) {
-        Order order = orderDao.get(orderId);
-        return order.getItems();
+    public Optional<List<Item>> getAllItems(Long orderId) {
+        Optional<Order> order = orderDao.get(orderId);
+        return Optional.ofNullable(order.get().getItems());
     }
 
     @Override
-    public Order update(Order order) {
+    public Optional<Order> update(Order order) {
         return orderDao.update(order);
     }
 
     @Override
-    public Order delete(Long id) {
-        return orderDao.delete(id);
+    public void delete(Long id) {
+        orderDao.delete(id);
     }
 
     @Override
-    public Order deleteByOrder(Order order) {
+    public Optional<Order> deleteByOrder(Order order) {
         return orderDao.deleteByOrder(order);
     }
 }

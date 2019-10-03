@@ -9,6 +9,7 @@ import internetshop.model.Item;
 import internetshop.service.BucketService;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BucketServiceImpl implements BucketService {
@@ -19,60 +20,48 @@ public class BucketServiceImpl implements BucketService {
     private static ItemDao itemDao;
 
     @Override
-    public Bucket addItem(Long bucketId, Long itemId) {
-        Bucket bucket = bucketDao.get(bucketId);
-        Item item = itemDao.get(itemId);
-        bucket.getItems().add(item);
-        return bucketDao.update(bucket);
+    public Optional<Bucket> addItem(Long bucketId, Long itemId) {
+        return bucketDao.addItem(bucketId, itemId);
     }
 
     @Override
-    public Bucket deleteItem(Long bucketId, Long itemId) {
-        Bucket bucket = bucketDao.get(bucketId);
-        bucket.deleteItem(itemId);
-        return bucketDao.update(bucket);
+    public Optional<Bucket> deleteItem(Long bucketId, Long itemId) {
+        return bucketDao.deleteItem(bucketId, itemId);
     }
 
     @Override
-    public Bucket clear(Long bucketId) {
-        Bucket bucket = bucketDao.get(bucketId);
-        bucket.getItems().clear();
-        return bucket;
+    public Optional<Bucket> clear(Long bucketId) {
+        return bucketDao.clear(bucketId);
     }
 
     @Override
-    public List<Item> getAllItems(Long bucketId) {
-        Bucket bucket = bucketDao.get(bucketId);
-        return bucket.getItems();
+    public Optional<List<Item>> getAllItems(Long bucketId) {
+        Optional<Bucket> bucket = bucketDao.get(bucketId);
+        return Optional.ofNullable(bucket.get().getItems());
     }
 
     @Override
-    public Bucket create(Bucket bucket) {
+    public Optional<Bucket> create(Bucket bucket) {
         return bucketDao.create(bucket);
     }
 
     @Override
-    public Bucket get(Long id) {
+    public Optional<Bucket> get(Long id) {
         return bucketDao.get(id);
     }
 
     @Override
-    public Bucket getByUser(Long userId) {
+    public Optional<Bucket> getByUser(Long userId) {
         return bucketDao.getByUser(userId);
     }
 
     @Override
-    public Bucket update(Bucket bucket) {
+    public Optional<Bucket> update(Bucket bucket) {
         return bucketDao.update(bucket);
     }
 
     @Override
-    public Bucket delete(Long id) {
-        return bucketDao.delete(id);
-    }
-
-    @Override
-    public Bucket deleteByBucket(Bucket bucket) {
-        return bucketDao.deleteByBucket(bucket);
+    public void delete(Long id) {
+        bucketDao.delete(id);
     }
 }
