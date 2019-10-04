@@ -1,11 +1,11 @@
 package internetshop.dao.jdbc;
 
 import internetshop.dao.BucketDao;
+import internetshop.dao.ItemDao;
 import internetshop.lib.Dao;
 import internetshop.lib.Inject;
 import internetshop.model.Bucket;
 import internetshop.model.Item;
-import internetshop.service.ItemService;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -21,7 +21,7 @@ public class BucketDaoJdbcImpl extends AbstractDao<Bucket> implements BucketDao 
     private static Logger logger = Logger.getLogger(BucketDaoJdbcImpl.class);
 
     @Inject
-    private static ItemService itemService;
+    private static ItemDao itemDao;
 
     public BucketDaoJdbcImpl(Connection connection) {
         super(connection);
@@ -45,17 +45,8 @@ public class BucketDaoJdbcImpl extends AbstractDao<Bucket> implements BucketDao 
             logger.error("Can't create order");
         }
 
-        String insertBucketItemQuery = "INSERT INTO `buckets_items`"
-                + " (`bucket_id`, `item_id`) VALUES (?, ?);";
         for (Item item : bucket.getItems()) {
-            try (PreparedStatement preparedStatement
-                         = connection.prepareStatement(insertBucketItemQuery)) {
-                preparedStatement.setLong(1, bucket.getId());
-                preparedStatement.setLong(2, item.getId());
-                preparedStatement.executeUpdate();
-            } catch (SQLException e) {
-                logger.error("Can't create buckets_items");
-            }
+            addItem(bucket.getId(), item.getId());
         }
         return Optional.of(bucket);
     }
@@ -75,7 +66,7 @@ public class BucketDaoJdbcImpl extends AbstractDao<Bucket> implements BucketDao 
                 long itemId = resultSet.getLong("item_id");
                 bucket.setId(bucketIdFromDb);
                 bucket.setUserId(userId);
-                Optional<Item> item = itemService.get(itemId);
+                Optional<Item> item = itemDao.get(itemId);
                 bucket.getItems().add(item.get());
             }
             return Optional.of(bucket);

@@ -17,4 +17,6 @@ public interface OrderDao {
     void delete(Long id);
 
     Optional<Order> deleteByOrder(Order order);
+
+    Optional<Order> addItem(Long orderId, Long itemId);
 }

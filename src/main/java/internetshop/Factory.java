@@ -3,18 +3,22 @@ package internetshop;
 import internetshop.dao.BucketDao;
 import internetshop.dao.ItemDao;
 import internetshop.dao.OrderDao;
+import internetshop.dao.RoleDao;
 import internetshop.dao.UserDao;
 import internetshop.dao.jdbc.BucketDaoJdbcImpl;
 import internetshop.dao.jdbc.ItemDaoJdbcImpl;
 import internetshop.dao.jdbc.OrderDaoJdbcImpl;
+import internetshop.dao.jdbc.RoleDaoJdbcImpl;
 import internetshop.dao.jdbc.UserDaoJdbcImpl;
 import internetshop.service.BucketService;
 import internetshop.service.ItemService;
 import internetshop.service.OrderService;
+import internetshop.service.RoleService;
 import internetshop.service.UserService;
 import internetshop.service.impl.BucketServiceImpl;
 import internetshop.service.impl.ItemServiceImpl;
 import internetshop.service.impl.OrderServiceImpl;
+import internetshop.service.impl.RoleServiceImpl;
 import internetshop.service.impl.UserServiceImpl;
 
 import java.sql.Connection;
@@ -41,10 +45,12 @@ public class Factory {
     private static BucketDao bucketDaoInstanse;
     private static OrderDao orderDaoInstanse;
     private static UserDao userDaoInstanse;
+    private static RoleDao roleDaoInstanse;
     private static ItemService itemServiceInstanse;
     private static BucketService bucketServiceInstanse;
     private static OrderService orderServiceInstanse;
     private static UserService userServiceInstanse;
+    private static RoleService roleServiceInstanse;
 
     public static ItemService getItemService() {
         if (itemServiceInstanse == null) {
@@ -74,6 +80,13 @@ public class Factory {
         return userServiceInstanse;
     }
 
+    public static RoleService getRoleService() {
+        if (roleServiceInstanse == null) {
+            roleServiceInstanse = new RoleServiceImpl();
+        }
+        return roleServiceInstanse;
+    }
+
     public static ItemDao getItemDao() {
         if (itemDaoInstanse == null) {
             itemDaoInstanse = new ItemDaoJdbcImpl(connection);
@@ -100,5 +113,12 @@ public class Factory {
             userDaoInstanse = new UserDaoJdbcImpl(connection);
         }
         return userDaoInstanse;
+    }
+
+    public static RoleDao getRoleDao() {
+        if (roleDaoInstanse == null) {
+            roleDaoInstanse = new RoleDaoJdbcImpl(connection);
+        }
+        return roleDaoInstanse;
     }
 }

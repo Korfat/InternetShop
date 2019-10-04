@@ -23,4 +23,9 @@ public interface UserDao {
     Optional<User> getByToken(String token);
 
     Optional<List<Order>> getOrders(Long userId);
+
+    Optional<User> addRole(Long userId, Long roleId);
+
+    Optional<User> setUser(Long id, String name, String surname,
+                           String login, String password, String token);
 }

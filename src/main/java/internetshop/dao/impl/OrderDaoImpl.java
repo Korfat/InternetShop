@@ -51,4 +51,9 @@ public class OrderDaoImpl implements OrderDao {
         Storage.orders.removeIf(s -> s.equals(order));
         return Optional.of(order);
     }
+
+    @Override
+    public Optional<Order> addItem(Long orderId, Long itemId) {
+        return Optional.empty();
+    }
 }

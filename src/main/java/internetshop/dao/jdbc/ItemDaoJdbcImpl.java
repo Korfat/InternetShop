@@ -109,7 +109,7 @@ public class ItemDaoJdbcImpl extends AbstractDao<Item> implements ItemDao {
             preparedStatement.setString(1, item.getName());
             preparedStatement.setString(2, item.getModel());
             preparedStatement.setDouble(3, item.getPrice());
-            preparedStatement.setLong(5, item.getId());
+            preparedStatement.setLong(4, item.getId());
             preparedStatement.executeUpdate();
             return Optional.of(item);
         } catch (SQLException e) {

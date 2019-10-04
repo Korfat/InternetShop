@@ -1,5 +1,6 @@
 package internetshop.dao.jdbc;
 
+import internetshop.dao.OrderDao;
 import internetshop.dao.RoleDao;
 import internetshop.dao.UserDao;
 import internetshop.exceptions.AuthenticationException;
@@ -8,7 +9,6 @@ import internetshop.lib.Inject;
 import internetshop.model.Order;
 import internetshop.model.Role;
 import internetshop.model.User;
-import internetshop.service.OrderService;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -26,7 +26,7 @@ public class UserDaoJdbcImpl extends AbstractDao<User> implements UserDao {
     private static Logger logger = Logger.getLogger(UserDaoJdbcImpl.class);
 
     @Inject
-    private static OrderService orderService;
+    private static OrderDao orderDao;
 
     public UserDaoJdbcImpl(Connection connection) {
         super(connection);
@@ -55,17 +55,8 @@ public class UserDaoJdbcImpl extends AbstractDao<User> implements UserDao {
             logger.error("Can't create order");
         }
 
-        String insertOrderItemQuery = "INSERT INTO `users_roles`"
-                + " (`user_id`, `role_id`) VALUES (?, ?);";
         for (Role role : user.getRoles()) {
-            try (PreparedStatement preparedStatement
-                         = connection.prepareStatement(insertOrderItemQuery)) {
-                preparedStatement.setLong(1, user.getId());
-                preparedStatement.setLong(2, role.getId());
-                preparedStatement.executeUpdate();
-            } catch (SQLException e) {
-                logger.error("Can't create order_item");
-            }
+            addRole(user.getId(), role.getId());
         }
         return Optional.of(user);
     }
@@ -89,12 +80,7 @@ public class UserDaoJdbcImpl extends AbstractDao<User> implements UserDao {
                 Long roleId = resultSet.getLong("role_id");
                 RoleDao roleDao = new RoleDaoJdbcImpl(connection);
                 Optional<Role> role = roleDao.get(roleId);
-                user.setId(userId);
-                user.setName(name);
-                user.setSurname(surname);
-                user.setLogin(login);
-                user.setPassword(password);
-                user.setToken(token);
+                user = setUser(userId, name, surname, login, password, token).get();
                 user.addRole(role.get());
             }
             return Optional.of(user);
@@ -118,13 +104,7 @@ public class UserDaoJdbcImpl extends AbstractDao<User> implements UserDao {
                 String login = resultSet.getString("login");
                 String password = resultSet.getString("password");
                 String token = resultSet.getString("token");
-                User user = new User();
-                user.setId(userId);
-                user.setName(name);
-                user.setSurname(surname);
-                user.setLogin(login);
-                user.setPassword(password);
-                user.setToken(token);
+                User user = user = setUser(userId, name, surname, login, password, token).get();
                 users.add(user);
             }
             return Optional.of(users);
@@ -169,7 +149,7 @@ public class UserDaoJdbcImpl extends AbstractDao<User> implements UserDao {
             logger.error("Can't get all orders");
         }
         for (Long orderId : ordersId) {
-            orderService.delete(orderId);
+            orderDao.delete(orderId);
         }
         String queryRoles = "DELETE FROM users_roles WHERE user_id = ?;";
         try (PreparedStatement preparedStatement
@@ -238,7 +218,7 @@ public class UserDaoJdbcImpl extends AbstractDao<User> implements UserDao {
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 long orderId = resultSet.getLong("order_id");
-                Optional<Order> order = orderService.get(orderId);
+                Optional<Order> order = orderDao.get(orderId);
                 orders.add(order.get());
             }
             return Optional.of(orders);
@@ -246,5 +226,32 @@ public class UserDaoJdbcImpl extends AbstractDao<User> implements UserDao {
             logger.error("Can't get all orders");
         }
         return Optional.empty();
+    }
+
+    @Override
+    public Optional<User> addRole(Long userId, Long roleId) {
+        String query = "INSERT INTO `users_roles` (`user_id`, `role_id`) VALUES (?, ?);";
+        try (PreparedStatement preparedStatement
+                     = connection.prepareStatement(query)) {
+            preparedStatement.setLong(1, userId);
+            preparedStatement.setLong(2, roleId);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            logger.error("Can't add role");
+        }
+        return get(userId);
+    }
+
+    @Override
+    public Optional<User> setUser(Long id, String name, String surname, String login,
+                                  String password, String token) {
+        User user = new User();
+        user.setId(id);
+        user.setName(name);
+        user.setSurname(surname);
+        user.setLogin(login);
+        user.setPassword(password);
+        user.setToken(token);
+        return Optional.of(user);
     }
 }
