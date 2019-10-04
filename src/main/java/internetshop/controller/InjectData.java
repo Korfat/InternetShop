@@ -20,12 +20,6 @@ public class InjectData extends HttpServlet {
     @Inject
     private static BucketService bucketService;
 
-    @Inject
-    private static UserService userService;
-
-    @Inject
-    private static BucketService bucketService;
-
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {

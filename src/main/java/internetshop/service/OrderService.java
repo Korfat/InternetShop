@@ -4,21 +4,22 @@ import internetshop.model.Item;
 import internetshop.model.Order;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface OrderService {
-    Order completeOrder(List<Item> items, Long userId);
+    Optional<Order> completeOrder(List<Item> items, Long userId);
 
-    Order create(Order order);
+    Optional<Order> create(Order order);
 
-    Order get(Long id);
+    Optional<Order> get(Long id);
 
-    List<Order> getAll();
+    Optional<List<Order>> getAll();
 
-    List<Item> getAllItems(Long orderId);
+    Optional<List<Item>> getAllItems(Long orderId);
 
-    Order update(Order order);
+    Optional<Order> update(Order order);
 
-    Order delete(Long id);
+    void delete(Long id);
 
-    Order deleteByOrder(Order order);
+    Optional<Order> deleteByOrder(Order order);
 }

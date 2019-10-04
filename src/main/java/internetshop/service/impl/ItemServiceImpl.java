@@ -7,6 +7,7 @@ import internetshop.model.Item;
 import internetshop.service.ItemService;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ItemServiceImpl implements ItemService {
@@ -14,22 +15,22 @@ public class ItemServiceImpl implements ItemService {
     private static ItemDao itemDao;
 
     @Override
-    public Item create(Item item) {
+    public Optional<Item> create(Item item) {
         return itemDao.create(item);
     }
 
     @Override
-    public Item get(Long id) {
+    public Optional<Item> get(Long id) {
         return itemDao.get(id);
     }
 
     @Override
-    public List<Item> getAll() {
+    public Optional<List<Item>> getAll() {
         return itemDao.getAll();
     }
 
     @Override
-    public Item update(Item item) {
+    public Optional<Item> update(Item item) {
         return itemDao.update(item);
     }
 
@@ -39,7 +40,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Item deleteByItem(Item item) {
+    public Optional<Item> deleteByItem(Item item) {
         return itemDao.deleteByItem(item);
     }
 }

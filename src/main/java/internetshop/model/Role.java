@@ -3,8 +3,9 @@ package internetshop.model;
 import internetshop.idgenerator.RoleIdGenerator;
 
 public class Role {
-    private final Long id;
+    private Long id;
     private RoleName roleName;
+    private String name;
 
     public Role() {
         this.id = RoleIdGenerator.getGeneratedId();
@@ -21,6 +22,18 @@ public class Role {
 
     public RoleName getRoleName() {
         return roleName;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void setRoleName(RoleName roleName) {

@@ -19,7 +19,7 @@ public class GetItemsFromOrderController extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         String orderId = req.getParameter("order_id");
-        List<Item> itemsInOrder = orderService.getAllItems(Long.valueOf(orderId));
+        List<Item> itemsInOrder = orderService.getAllItems(Long.valueOf(orderId)).get();
         req.setAttribute("itemsInOrder", itemsInOrder);
         req.getRequestDispatcher("/WEB-INF/views/getOrder.jsp").forward(req, resp);
     }

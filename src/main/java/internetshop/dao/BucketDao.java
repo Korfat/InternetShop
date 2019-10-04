@@ -2,16 +2,22 @@ package internetshop.dao;
 
 import internetshop.model.Bucket;
 
+import java.util.Optional;
+
 public interface BucketDao {
-    Bucket create(Bucket bucket);
+    Optional<Bucket> create(Bucket bucket);
 
-    Bucket get(Long bucketId);
+    Optional<Bucket> get(Long bucketId);
 
-    Bucket getByUser(Long userId);
+    Optional<Bucket> getByUser(Long userId);
 
-    Bucket update(Bucket bucket);
+    Optional<Bucket> update(Bucket bucket);
 
-    Bucket delete(Long id);
+    void delete(Long id);
 
-    Bucket deleteByBucket(Bucket bucket);
+    Optional<Bucket> addItem(Long bucketId, Long itemId);
+
+    Optional<Bucket> deleteItem(Long bucketId, Long itemId);
+
+    Optional<Bucket> clear(Long bucketId);
 }

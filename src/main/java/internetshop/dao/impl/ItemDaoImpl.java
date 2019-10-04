@@ -7,35 +7,35 @@ import internetshop.model.Item;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Dao
 public class ItemDaoImpl implements ItemDao {
     @Override
-    public Item create(Item item) {
+    public Optional<Item> create(Item item) {
         Storage.items.add(item);
-        return item;
+        return Optional.ofNullable(item);
     }
 
     @Override
-    public Item get(Long id) {
+    public Optional<Item> get(Long id) {
         return Storage.items
                 .stream()
                 .filter(i -> i.getId().equals(id))
-                .findFirst()
-                .orElseThrow(() -> new NoSuchElementException("Can't find number with id " + id));
+                .findFirst();
     }
 
     @Override
-    public List<Item> getAll() {
-        return Storage.items;
+    public Optional<List<Item>> getAll() {
+        return Optional.of(Storage.items);
     }
 
     @Override
-    public Item update(Item item) {
+    public Optional<Item> update(Item item) {
         for (int i = 0; i < Storage.items.size(); i++) {
             if (Storage.items.get(i).getId().equals(item.getId())) {
                 Storage.items.set(i, item);
-                return item;
+                return Optional.of(item);
             }
         }
         throw new NoSuchElementException("Can't find item" + item.getName());
@@ -43,13 +43,12 @@ public class ItemDaoImpl implements ItemDao {
 
     @Override
     public void delete(Long id) {
-        Item item = get(id);
         Storage.items.removeIf(s -> s.getId().equals(id));
     }
 
     @Override
-    public Item deleteByItem(Item item) {
+    public Optional<Item> deleteByItem(Item item) {
         Storage.items.removeIf(s -> s.equals(item));
-        return item;
+        return Optional.ofNullable(item);
     }
 }

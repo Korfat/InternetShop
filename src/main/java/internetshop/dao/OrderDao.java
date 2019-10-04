@@ -3,17 +3,20 @@ package internetshop.dao;
 import internetshop.model.Order;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface OrderDao {
-    Order create(Order item);
+    Optional<Order> create(Order order);
 
-    Order get(Long id);
+    Optional<Order> get(Long id);
 
-    List<Order> getAll();
+    Optional<List<Order>> getAll();
 
-    Order update(Order item);
+    Optional<Order> update(Order order);
 
-    Order delete(Long id);
+    void delete(Long id);
 
-    Order deleteByOrder(Order order);
+    Optional<Order> deleteByOrder(Order order);
+
+    Optional<Order> addItem(Long orderId, Long itemId);
 }
