@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import internetshop.util.HashUtil;
 import org.apache.log4j.Logger;
 
 @Dao
@@ -34,15 +35,18 @@ public class UserDaoJdbcImpl extends AbstractDao<User> implements UserDao {
 
     @Override
     public Optional<User> create(User user) {
-        String query = "INSERT INTO `users` (`name`, `surname`, `login`, `password`, `token`)"
-                + " VALUES (?, ?, ?, ?, ?);";
+        String query = "INSERT INTO `users` (`name`, `surname`, `login`, `password`, `salt`, `token`)"
+                + " VALUES (?, ?, ?, ?, ?, ?);";
+        byte[] salt = HashUtil.getSalt();
+        String hashedPassword = HashUtil.hashPassword(user.getPassword(), salt);
         try (PreparedStatement preparedStatement
                      = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, user.getName());
             preparedStatement.setString(2, user.getSurname());
             preparedStatement.setString(3, user.getLogin());
-            preparedStatement.setString(4, user.getPassword());
-            preparedStatement.setString(5, user.getToken());
+            preparedStatement.setString(4, hashedPassword);
+            preparedStatement.setBytes(5, salt);
+            preparedStatement.setString(6, user.getToken());
             preparedStatement.executeUpdate();
             try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
@@ -76,11 +80,12 @@ public class UserDaoJdbcImpl extends AbstractDao<User> implements UserDao {
                 String surname = resultSet.getString("surname");
                 String login = resultSet.getString("login");
                 String password = resultSet.getString("password");
+                byte[] salt = resultSet.getBytes("salt");
                 String token = resultSet.getString("token");
                 Long roleId = resultSet.getLong("role_id");
                 RoleDao roleDao = new RoleDaoJdbcImpl(connection);
                 Optional<Role> role = roleDao.get(roleId);
-                user = setUser(userId, name, surname, login, password, token).get();
+                user = setUser(userId, name, surname, login, password, salt, token).get();
                 user.addRole(role.get());
             }
             return Optional.of(user);
@@ -103,8 +108,9 @@ public class UserDaoJdbcImpl extends AbstractDao<User> implements UserDao {
                 String surname = resultSet.getString("surname");
                 String login = resultSet.getString("login");
                 String password = resultSet.getString("password");
+                byte[] salt = resultSet.getBytes("salt");
                 String token = resultSet.getString("token");
-                User user = user = setUser(userId, name, surname, login, password, token).get();
+                User user = setUser(userId, name, surname, login, password, salt, token).get();
                 users.add(user);
             }
             return Optional.of(users);
@@ -171,17 +177,19 @@ public class UserDaoJdbcImpl extends AbstractDao<User> implements UserDao {
 
     @Override
     public Optional<User> login(String login, String password) throws AuthenticationException {
-        String query = "SELECT * FROM users WHERE login = ? AND password = ?;";
+        String query = "SELECT * FROM users WHERE login = ?;";
         Optional<User> user;
         try (PreparedStatement preparedStatement
                      = connection.prepareStatement(query)) {
             preparedStatement.setString(1, login);
-            preparedStatement.setString(2, password);
+//            preparedStatement.setString(2, password);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 long userId = resultSet.getLong("user_id");
                 user = get(userId);
-                return user;
+                if (user.get().getPassword().equals(HashUtil.hashPassword(password, user.get().getSalt()))) {
+                    return user;
+                }
             }
         } catch (SQLException e) {
             logger.error("Can't delete user");
@@ -244,13 +252,14 @@ public class UserDaoJdbcImpl extends AbstractDao<User> implements UserDao {
 
     @Override
     public Optional<User> setUser(Long id, String name, String surname, String login,
-                                  String password, String token) {
+                                  String password, byte[] salt, String token) {
         User user = new User();
         user.setId(id);
         user.setName(name);
         user.setSurname(surname);
         user.setLogin(login);
         user.setPassword(password);
+        user.setSalt(salt);
         user.setToken(token);
         return Optional.of(user);
     }

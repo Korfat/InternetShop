@@ -70,7 +70,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public Optional<List<Order>> getOrders(Long userId) {
-        return null;
+        return Optional.empty();
     }
 
     @Override
@@ -80,7 +80,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public Optional<User> setUser(Long id, String name, String surname,
-                                  String login, String password, String token) {
+                                  String login, String password, byte[] salt, String token) {
         return Optional.empty();
     }
 }
