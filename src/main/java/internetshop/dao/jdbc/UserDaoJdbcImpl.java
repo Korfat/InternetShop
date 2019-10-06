@@ -9,6 +9,7 @@ import internetshop.lib.Inject;
 import internetshop.model.Order;
 import internetshop.model.Role;
 import internetshop.model.User;
+import internetshop.util.HashUtil;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -19,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import internetshop.util.HashUtil;
 import org.apache.log4j.Logger;
 
 @Dao
@@ -35,8 +35,8 @@ public class UserDaoJdbcImpl extends AbstractDao<User> implements UserDao {
 
     @Override
     public Optional<User> create(User user) {
-        String query = "INSERT INTO `users` (`name`, `surname`, `login`, `password`, `salt`, `token`)"
-                + " VALUES (?, ?, ?, ?, ?, ?);";
+        String query = "INSERT INTO `users` (`name`, `surname`, `login`, `password`,"
+                + " `salt`, `token`) VALUES (?, ?, ?, ?, ?, ?);";
         byte[] salt = HashUtil.getSalt();
         String hashedPassword = HashUtil.hashPassword(user.getPassword(), salt);
         try (PreparedStatement preparedStatement
@@ -182,12 +182,12 @@ public class UserDaoJdbcImpl extends AbstractDao<User> implements UserDao {
         try (PreparedStatement preparedStatement
                      = connection.prepareStatement(query)) {
             preparedStatement.setString(1, login);
-//            preparedStatement.setString(2, password);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 long userId = resultSet.getLong("user_id");
                 user = get(userId);
-                if (user.get().getPassword().equals(HashUtil.hashPassword(password, user.get().getSalt()))) {
+                if (user.get().getPassword()
+                        .equals(HashUtil.hashPassword(password, user.get().getSalt()))) {
                     return user;
                 }
             }
