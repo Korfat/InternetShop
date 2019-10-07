@@ -27,5 +27,5 @@ public interface UserDao {
     Optional<User> addRole(Long userId, Long roleId);
 
     Optional<User> setUser(Long id, String name, String surname,
-                           String login, String password, String token);
+                           String login, String password, byte[] salt, String token);
 }
