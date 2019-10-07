@@ -2,8 +2,6 @@ package internetshop.controller;
 
 import internetshop.lib.Inject;
 import internetshop.service.BucketService;
-import internetshop.service.ItemService;
-import internetshop.service.UserService;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -13,11 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 public class AddItemToBucketController extends HttpServlet {
     @Inject
-    private static ItemService itemService;
-    @Inject
     private static BucketService bucketService;
-    @Inject
-    private static UserService userService;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
