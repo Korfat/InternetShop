@@ -75,7 +75,7 @@ public class ItemDaoJdbcImpl extends AbstractDao<Item> implements ItemDao {
     }
 
     @Override
-    public Optional<List<Item>> getAll() {
+    public List<Item> getAll() {
         List<Item> items = new ArrayList<>();
         String query = "SELECT * FROM items;";
         try (PreparedStatement preparedStatement
@@ -93,11 +93,11 @@ public class ItemDaoJdbcImpl extends AbstractDao<Item> implements ItemDao {
                 item.setPrice(price);
                 items.add(item);
             }
-            return Optional.of(items);
+            return items;
         } catch (SQLException e) {
             logger.error("Can't get order");
         }
-        return Optional.empty();
+        return null;
     }
 
     @Override

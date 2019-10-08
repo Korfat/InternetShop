@@ -18,7 +18,7 @@ public class GetAllItemController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        List<Item> items = itemService.getAll().get();
+        List<Item> items = itemService.getAll();
         req.setAttribute("items", items);
         req.getRequestDispatcher("/WEB-INF/views/AllItems.jsp").forward(req, resp);
     }
