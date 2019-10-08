@@ -10,7 +10,7 @@ public interface ItemDao {
 
     Optional<Item> get(Long id);
 
-    Optional<List<Item>> getAll();
+    List<Item> getAll();
 
     Optional<Item> update(Item item);
 

@@ -26,8 +26,8 @@ public class ItemDaoImpl implements ItemDao {
     }
 
     @Override
-    public Optional<List<Item>> getAll() {
-        return Optional.of(Storage.items);
+    public List<Item> getAll() {
+        return Storage.items;
     }
 
     @Override
