@@ -1,0 +1,150 @@
+package internetshop.dao.hibernate;
+
+import internetshop.dao.UserDao;
+import internetshop.exceptions.AuthenticationException;
+import internetshop.lib.Dao;
+import internetshop.model.Order;
+import internetshop.model.User;
+import internetshop.util.HashUtil;
+import internetshop.util.HibernateUtil;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.apache.log4j.Logger;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.query.Query;
+
+@Dao
+public class UserDaoHibernateImpl implements UserDao {
+    private static Logger logger = Logger.getLogger(UserDaoHibernateImpl.class);
+
+    @Override
+    public Optional<User> create(User user) {
+        Long userId = null;
+        byte[] salt = HashUtil.getSalt();
+        user.setPassword(HashUtil.hashPassword(user.getPassword(), salt));
+        user.setSalt(salt);
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            userId = (Long) session.save(user);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        }
+        user.setId(userId);
+        return Optional.ofNullable(user);
+    }
+
+    @Override
+    public Optional<User> get(Long id) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            User user = session.get(User.class, id);
+            return Optional.of(user);
+        }
+    }
+
+    @Override
+    public List<User> getAll() {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return session.createCriteria(User.class).list();
+        }
+    }
+
+    @Override
+    public Optional<User> update(User user) {
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            session.update(user);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        }
+        return Optional.ofNullable(user);
+    }
+
+    @Override
+    public void delete(Long id) {
+        User user = get(id).get();
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            session.delete(user);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        }
+    }
+
+    @Override
+    public Optional<User> login(String login, String password) throws AuthenticationException {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Query query = session.createQuery("from User where login=:login");
+            query.setParameter("login", login);
+            List<User> list = query.list();
+            return list.stream()
+                    .filter(u -> u.getPassword()
+                            .equals(HashUtil.hashPassword(password, u.getSalt())))
+                    .findFirst();
+        }
+    }
+
+    @Override
+    public Optional<User> getByToken(String token) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Query query = session.createQuery("from User where token=:token");
+            query.setParameter("token", token);
+            List<User> list = query.list();
+            return list.stream().findFirst();
+        }
+    }
+
+    @Override
+    public Optional<List<Order>> getOrders(Long userId) {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<User> addRole(Long userId, Long roleId) {
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            Query query = session.createSQLQuery(
+                    "INSERT INTO users_roles(user_id, role_id) VALUES(?, ?);");
+            query.setParameter(1, userId);
+            query.setParameter(2, roleId);
+            query.executeUpdate();
+            transaction.commit();
+        } catch (HibernateException e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            logger.error("Failed to add the item into the bucket");
+        }
+        return get(userId);
+    }
+
+    @Override
+    public Optional<User> setUser(Long id, String name, String surname, String login,
+                                  String password, byte[] salt, String token) {
+        User user = new User();
+        user.setId(id);
+        user.setName(name);
+        user.setSurname(surname);
+        user.setLogin(login);
+        user.setPassword(password);
+        user.setSalt(salt);
+        user.setToken(token);
+        return Optional.of(user);
+    }
+}

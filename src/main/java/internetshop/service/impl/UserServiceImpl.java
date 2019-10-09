@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<List<User>> getAll() {
+    public List<User> getAll() {
         return userDao.getAll();
     }
 

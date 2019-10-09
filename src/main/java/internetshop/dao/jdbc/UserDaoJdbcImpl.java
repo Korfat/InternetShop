@@ -96,7 +96,7 @@ public class UserDaoJdbcImpl extends AbstractDao<User> implements UserDao {
     }
 
     @Override
-    public Optional<List<User>> getAll() {
+    public List<User> getAll() {
         String query = "SELECT * FROM users;";
         List<User> users = new ArrayList<>();
         try (PreparedStatement preparedStatement
@@ -113,11 +113,11 @@ public class UserDaoJdbcImpl extends AbstractDao<User> implements UserDao {
                 User user = setUser(userId, name, surname, login, password, salt, token).get();
                 users.add(user);
             }
-            return Optional.of(users);
+            return users;
         } catch (SQLException e) {
             logger.error("Can't get all orders");
         }
-        return Optional.empty();
+        return null;
     }
 
     @Override

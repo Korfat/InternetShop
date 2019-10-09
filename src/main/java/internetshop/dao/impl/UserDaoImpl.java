@@ -28,8 +28,8 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public Optional<List<User>> getAll() {
-        return Optional.of(Storage.users);
+    public List<User> getAll() {
+        return Storage.users;
     }
 
     @Override

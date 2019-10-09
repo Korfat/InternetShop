@@ -12,7 +12,7 @@ public interface UserDao {
 
     Optional<User> get(Long id);
 
-    Optional<List<User>> getAll();
+    List<User> getAll();
 
     Optional<User> update(User user);
 

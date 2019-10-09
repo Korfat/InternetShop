@@ -2,10 +2,12 @@ package internetshop.dao.jdbc;
 
 import internetshop.dao.BucketDao;
 import internetshop.dao.ItemDao;
+import internetshop.dao.UserDao;
 import internetshop.lib.Dao;
 import internetshop.lib.Inject;
 import internetshop.model.Bucket;
 import internetshop.model.Item;
+import internetshop.model.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -23,6 +25,9 @@ public class BucketDaoJdbcImpl extends AbstractDao<Bucket> implements BucketDao 
     @Inject
     private static ItemDao itemDao;
 
+    @Inject
+    private static UserDao userDao;
+
     public BucketDaoJdbcImpl(Connection connection) {
         super(connection);
     }
@@ -32,7 +37,7 @@ public class BucketDaoJdbcImpl extends AbstractDao<Bucket> implements BucketDao 
         String query = "INSERT INTO `buckets` (`user_id`) VALUES (?);";
         try (PreparedStatement preparedStatement
                      = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-            preparedStatement.setLong(1, bucket.getUserId());
+            preparedStatement.setLong(1, bucket.getUser().getId());
             preparedStatement.executeUpdate();
             try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
@@ -65,7 +70,8 @@ public class BucketDaoJdbcImpl extends AbstractDao<Bucket> implements BucketDao 
                 long userId = resultSet.getLong("user_id");
                 long itemId = resultSet.getLong("item_id");
                 bucket.setId(bucketIdFromDb);
-                bucket.setUserId(userId);
+                User user = userDao.get(userId).get();
+                bucket.setUser(user);
                 Optional<Item> item = itemDao.get(itemId);
                 bucket.getItems().add(item.get());
             }
@@ -88,7 +94,8 @@ public class BucketDaoJdbcImpl extends AbstractDao<Bucket> implements BucketDao 
                 long bucketIdFromDb = resultSet.getLong("bucket_id");
                 long userIdFromDb = resultSet.getLong("user_id");
                 bucket.setId(bucketIdFromDb);
-                bucket.setUserId(userIdFromDb);
+                User user = userDao.get(userIdFromDb).get();
+                bucket.setUser(user);
             }
             return Optional.of(bucket);
         } catch (SQLException e) {
@@ -102,7 +109,7 @@ public class BucketDaoJdbcImpl extends AbstractDao<Bucket> implements BucketDao 
         String query = "UPDATE buckets SET user_id = ? WHERE bucket_id = ?;";
         try (PreparedStatement preparedStatement
                      = connection.prepareStatement(query)) {
-            preparedStatement.setLong(1, bucket.getUserId());
+            preparedStatement.setLong(1, bucket.getUser().getId());
             preparedStatement.setLong(2, bucket.getId());
             preparedStatement.executeUpdate();
             return Optional.of(bucket);
@@ -159,7 +166,7 @@ public class BucketDaoJdbcImpl extends AbstractDao<Bucket> implements BucketDao 
             preparedStatement.setLong(1, bucketId);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            logger.error("Can't delete item");
+            logger.error("Can't clear bucket");
         }
         return get(bucketId);
     }
