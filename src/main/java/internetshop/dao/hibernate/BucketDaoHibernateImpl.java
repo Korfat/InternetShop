@@ -26,13 +26,20 @@ public class BucketDaoHibernateImpl implements BucketDao {
     public Optional<Bucket> create(Bucket bucket) {
         Long bucketId = null;
         Transaction transaction = null;
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        Session session = null;
+        try {
+            session = HibernateUtil.getSessionFactory().openSession();
             transaction = session.beginTransaction();
             bucketId = (Long) session.save(bucket);
             transaction.commit();
         } catch (Exception e) {
+            logger.error("Can't create bucket");
             if (transaction != null) {
                 transaction.rollback();
+            }
+        } finally {
+            if (session != null) {
+                session.close();
             }
         }
         bucket.setId(bucketId);
@@ -49,19 +56,25 @@ public class BucketDaoHibernateImpl implements BucketDao {
                 return bucket;
             }
         } catch (HibernateException e) {
-            logger.error("Error retrieving the bucket. ", e);
+            logger.error("Can't get bucket. ", e);
         }
-        logger.error("Error retrieving the bucket.");
         return Optional.empty();
+
+//        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+//            Bucket bucket = session.get(Bucket.class, bucketId);
+//            return Optional.of(bucket);
+//        }
     }
 
     @Override
     public Optional<Bucket> getByUser(Long userId) {
-        Bucket bucket;
+        Bucket bucket = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             Query query = session.createQuery("FROM Bucket WHERE user_id=:userId");
             query.setParameter("userId", userId);
             bucket = (Bucket) query.uniqueResult();
+        } catch (Exception e) {
+            logger.error("Can't get bucket");
         }
         return Optional.ofNullable(bucket);
     }
@@ -69,13 +82,20 @@ public class BucketDaoHibernateImpl implements BucketDao {
     @Override
     public Optional<Bucket> update(Bucket bucket) {
         Transaction transaction = null;
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        Session session = null;
+        try {
+            session = HibernateUtil.getSessionFactory().openSession();
             transaction = session.beginTransaction();
             session.update(bucket);
             transaction.commit();
         } catch (Exception e) {
+            logger.error("Can't update bucket");
             if (transaction != null) {
                 transaction.rollback();
+            }
+        } finally {
+            if (session != null) {
+                session.close();
             }
         }
         return Optional.ofNullable(bucket);
@@ -85,13 +105,20 @@ public class BucketDaoHibernateImpl implements BucketDao {
     public void delete(Long id) {
         Bucket bucket = get(id).get();
         Transaction transaction = null;
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        Session session = null;
+        try {
+            session = HibernateUtil.getSessionFactory().openSession();
             transaction = session.beginTransaction();
             session.delete(bucket);
             transaction.commit();
         } catch (Exception e) {
+            logger.error("Can't delete bucket");
             if (transaction != null) {
                 transaction.rollback();
+            }
+        } finally {
+            if (session != null) {
+                session.close();
             }
         }
     }
@@ -99,7 +126,9 @@ public class BucketDaoHibernateImpl implements BucketDao {
     @Override
     public Optional<Bucket> addItem(Long bucketId, Long itemId) {
         Transaction transaction = null;
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        Session session = null;
+        try {
+            session = HibernateUtil.getSessionFactory().openSession();
             transaction = session.beginTransaction();
             Query query = session.createSQLQuery(
                     "INSERT INTO buckets_items(bucket_id, item_id) VALUES(?, ?);");
@@ -107,11 +136,15 @@ public class BucketDaoHibernateImpl implements BucketDao {
             query.setParameter(2, itemId);
             query.executeUpdate();
             transaction.commit();
-        } catch (HibernateException e) {
+        } catch (Exception e) {
+            logger.error("Failed to add the item into the bucket");
             if (transaction != null) {
                 transaction.rollback();
             }
-            logger.error("Failed to add the item into the bucket");
+        } finally {
+            if (session != null) {
+                session.close();
+            }
         }
         return get(bucketId);
     }
@@ -119,7 +152,9 @@ public class BucketDaoHibernateImpl implements BucketDao {
     @Override
     public Optional<Bucket> deleteItem(Long bucketId, Long itemId) {
         Transaction transaction = null;
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        Session session = null;
+        try {
+            session = HibernateUtil.getSessionFactory().openSession();
             transaction = session.beginTransaction();
             Query query = session.createSQLQuery(
                     "DELETE FROM buckets_items WHERE bucket_id = ? AND item_id = ?;");
@@ -127,11 +162,15 @@ public class BucketDaoHibernateImpl implements BucketDao {
             query.setParameter(2, itemId);
             query.executeUpdate();
             transaction.commit();
-        } catch (HibernateException e) {
+        } catch (Exception e) {
+            logger.error("Failed to delete the item into the bucket");
             if (transaction != null) {
                 transaction.rollback();
             }
-            logger.error("Failed to delete the item from the bucket");
+        } finally {
+            if (session != null) {
+                session.close();
+            }
         }
         return get(bucketId);
     }

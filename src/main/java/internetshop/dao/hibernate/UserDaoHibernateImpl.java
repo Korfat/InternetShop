@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apache.log4j.Logger;
-import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
@@ -28,13 +27,20 @@ public class UserDaoHibernateImpl implements UserDao {
         user.setPassword(HashUtil.hashPassword(user.getPassword(), salt));
         user.setSalt(salt);
         Transaction transaction = null;
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        Session session = null;
+        try {
+            session = HibernateUtil.getSessionFactory().openSession();
             transaction = session.beginTransaction();
             userId = (Long) session.save(user);
             transaction.commit();
         } catch (Exception e) {
+            logger.error("Can't create user");
             if (transaction != null) {
                 transaction.rollback();
+            }
+        } finally {
+            if (session != null) {
+                session.close();
             }
         }
         user.setId(userId);
@@ -43,29 +49,43 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public Optional<User> get(Long id) {
+        User user = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            User user = session.get(User.class, id);
-            return Optional.of(user);
+            user = session.get(User.class, id);
+        } catch (Exception e) {
+            logger.error("Can't get user");
         }
+        return Optional.ofNullable(user);
     }
 
     @Override
     public List<User> getAll() {
+        List<User> users = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            return session.createCriteria(User.class).list();
+            users = session.createCriteria(User.class).list();
+        } catch (Exception e) {
+            logger.error("Can't get users");
         }
+        return users;
     }
 
     @Override
     public Optional<User> update(User user) {
         Transaction transaction = null;
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        Session session = null;
+        try {
+            session = HibernateUtil.getSessionFactory().openSession();
             transaction = session.beginTransaction();
             session.update(user);
             transaction.commit();
         } catch (Exception e) {
+            logger.error("Can't update user");
             if (transaction != null) {
                 transaction.rollback();
+            }
+        } finally {
+            if (session != null) {
+                session.close();
             }
         }
         return Optional.ofNullable(user);
@@ -75,13 +95,20 @@ public class UserDaoHibernateImpl implements UserDao {
     public void delete(Long id) {
         User user = get(id).get();
         Transaction transaction = null;
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        Session session = null;
+        try {
+            session = HibernateUtil.getSessionFactory().openSession();
             transaction = session.beginTransaction();
             session.delete(user);
             transaction.commit();
         } catch (Exception e) {
+            logger.error("Can't delete user");
             if (transaction != null) {
                 transaction.rollback();
+            }
+        } finally {
+            if (session != null) {
+                session.close();
             }
         }
     }
@@ -110,14 +137,16 @@ public class UserDaoHibernateImpl implements UserDao {
     }
 
     @Override
-    public Optional<List<Order>> getOrders(Long userId) {
-        return Optional.empty();
+    public List<Order> getOrders(Long userId) {
+        return null;
     }
 
     @Override
     public Optional<User> addRole(Long userId, Long roleId) {
         Transaction transaction = null;
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        Session session = null;
+        try {
+            session = HibernateUtil.getSessionFactory().openSession();
             transaction = session.beginTransaction();
             Query query = session.createSQLQuery(
                     "INSERT INTO users_roles(user_id, role_id) VALUES(?, ?);");
@@ -125,26 +154,16 @@ public class UserDaoHibernateImpl implements UserDao {
             query.setParameter(2, roleId);
             query.executeUpdate();
             transaction.commit();
-        } catch (HibernateException e) {
+        } catch (Exception e) {
+            logger.error("Failed to add the item into the bucket");
             if (transaction != null) {
                 transaction.rollback();
             }
-            logger.error("Failed to add the item into the bucket");
+        } finally {
+            if (session != null) {
+                session.close();
+            }
         }
         return get(userId);
-    }
-
-    @Override
-    public Optional<User> setUser(Long id, String name, String surname, String login,
-                                  String password, byte[] salt, String token) {
-        User user = new User();
-        user.setId(id);
-        user.setName(name);
-        user.setSurname(surname);
-        user.setLogin(login);
-        user.setPassword(password);
-        user.setSalt(salt);
-        user.setToken(token);
-        return Optional.of(user);
     }
 }
