@@ -5,6 +5,7 @@ import internetshop.lib.Dao;
 import internetshop.model.Item;
 import internetshop.util.HibernateUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,7 +54,7 @@ public class ItemDaoHibernateImpl implements ItemDao {
 
     @Override
     public List<Item> getAll() {
-        List<Item> items = null;
+        List<Item> items = new ArrayList<>();
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             items = session.createCriteria(Item.class).list();
         } catch (Exception e) {

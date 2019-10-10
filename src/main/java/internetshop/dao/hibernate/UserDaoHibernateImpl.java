@@ -8,6 +8,7 @@ import internetshop.model.User;
 import internetshop.util.HashUtil;
 import internetshop.util.HibernateUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -60,7 +61,7 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public List<User> getAll() {
-        List<User> users = null;
+        List<User> users = new ArrayList<>();
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             users = session.createCriteria(User.class).list();
         } catch (Exception e) {
@@ -115,25 +116,31 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public Optional<User> login(String login, String password) throws AuthenticationException {
+        List<User> list = new ArrayList<>();
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             Query query = session.createQuery("from User where login=:login");
             query.setParameter("login", login);
-            List<User> list = query.list();
-            return list.stream()
-                    .filter(u -> u.getPassword()
-                            .equals(HashUtil.hashPassword(password, u.getSalt())))
-                    .findFirst();
+            list = query.list();
+        } catch (Exception e) {
+            logger.error("Can't login users");
         }
+        return list.stream()
+                .filter(u -> u.getPassword()
+                        .equals(HashUtil.hashPassword(password, u.getSalt())))
+                .findFirst();
     }
 
     @Override
     public Optional<User> getByToken(String token) {
+        List<User> list = new ArrayList<>();
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             Query query = session.createQuery("from User where token=:token");
             query.setParameter("token", token);
-            List<User> list = query.list();
-            return list.stream().findFirst();
+            list = query.list();
+        } catch (Exception e) {
+            logger.error("Can't login users");
         }
+        return list.stream().findFirst();
     }
 
     @Override
