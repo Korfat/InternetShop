@@ -1,27 +1,33 @@
 package internetshop.model;
 
-import internetshop.idgenerator.RoleIdGenerator;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
+@Entity
+@Table(name = "roles")
 public class Role {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "role_id", columnDefinition = "INT")
     private Long id;
-    private RoleName roleName;
+    @Column(name = "name")
     private String name;
 
     public Role() {
-        this.id = RoleIdGenerator.getGeneratedId();
+
     }
 
-    public Role(RoleName roleName) {
+    private Role(String name) {
         this();
-        this.roleName = roleName;
+        this.name = name;
     }
 
     public Long getId() {
         return id;
-    }
-
-    public RoleName getRoleName() {
-        return roleName;
     }
 
     public void setId(Long id) {
@@ -36,15 +42,7 @@ public class Role {
         this.name = name;
     }
 
-    public void setRoleName(RoleName roleName) {
-        this.roleName = roleName;
-    }
-
-    public static Role of(String roleName) {
-        return new Role(RoleName.valueOf(roleName));
-    }
-
-    public enum RoleName {
-        USER, ADMIN;
+    public static Role of(String name) {
+        return new Role(name);
     }
 }

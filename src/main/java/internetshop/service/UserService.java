@@ -8,13 +8,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
-    Optional<List<Order>> getOrders(Long userId);
+    List<Order> getOrders(Long userId);
 
     Optional<User> create(User user);
 
     Optional<User> get(Long id);
 
-    Optional<List<User>> getAll();
+    List<User> getAll();
 
     Optional<User> update(User user);
 

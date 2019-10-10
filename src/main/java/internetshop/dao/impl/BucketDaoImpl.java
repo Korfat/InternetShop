@@ -28,7 +28,7 @@ public class BucketDaoImpl implements BucketDao {
     public Optional<Bucket> getByUser(Long userId) {
         return Storage.buckets
                 .stream()
-                .filter(i -> i.getUserId().equals(userId))
+                .filter(i -> i.getUser().getId().equals(userId))
                 .findFirst();
     }
 

@@ -18,7 +18,7 @@ public class UserServiceImpl implements UserService {
     private static UserDao userDao;
 
     @Override
-    public Optional<List<Order>> getOrders(Long userId) {
+    public List<Order> getOrders(Long userId) {
         return userDao.getOrders(userId);
     }
 
@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<List<User>> getAll() {
+    public List<User> getAll() {
         return userDao.getAll();
     }
 

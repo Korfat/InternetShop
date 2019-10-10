@@ -28,8 +28,8 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public Optional<List<User>> getAll() {
-        return Optional.of(Storage.users);
+    public List<User> getAll() {
+        return Storage.users;
     }
 
     @Override
@@ -69,18 +69,12 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public Optional<List<Order>> getOrders(Long userId) {
-        return Optional.empty();
+    public List<Order> getOrders(Long userId) {
+        return null;
     }
 
     @Override
     public Optional<User> addRole(Long userId, Long roleId) {
-        return Optional.empty();
-    }
-
-    @Override
-    public Optional<User> setUser(Long id, String name, String surname,
-                                  String login, String password, byte[] salt, String token) {
         return Optional.empty();
     }
 }
