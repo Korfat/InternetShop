@@ -59,11 +59,6 @@ public class BucketDaoHibernateImpl implements BucketDao {
             logger.error("Can't get bucket. ", e);
         }
         return Optional.empty();
-
-//        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-//            Bucket bucket = session.get(Bucket.class, bucketId);
-//            return Optional.of(bucket);
-//        }
     }
 
     @Override
