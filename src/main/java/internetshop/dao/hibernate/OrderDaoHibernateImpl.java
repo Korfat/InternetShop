@@ -1,11 +1,8 @@
 package internetshop.dao.hibernate;
 
-import internetshop.dao.UserDao;
-import internetshop.exceptions.AuthenticationException;
+import internetshop.dao.OrderDao;
 import internetshop.lib.Dao;
 import internetshop.model.Order;
-import internetshop.model.User;
-import internetshop.util.HashUtil;
 import internetshop.util.HibernateUtil;
 
 import java.util.ArrayList;
@@ -16,26 +13,22 @@ import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
-
 @Dao
-public class UserDaoHibernateImpl implements UserDao {
-    private static Logger logger = Logger.getLogger(UserDaoHibernateImpl.class);
+public class OrderDaoHibernateImpl implements OrderDao {
+    private static Logger logger = Logger.getLogger(OrderDaoHibernateImpl.class);
 
     @Override
-    public Optional<User> create(User user) {
-        Long userId = null;
-        byte[] salt = HashUtil.getSalt();
-        user.setPassword(HashUtil.hashPassword(user.getPassword(), salt));
-        user.setSalt(salt);
+    public Optional<Order> create(Order order) {
+        Long orderId = null;
         Transaction transaction = null;
         Session session = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             transaction = session.beginTransaction();
-            userId = (Long) session.save(user);
+            orderId = (Long) session.save(order);
             transaction.commit();
         } catch (Exception e) {
-            logger.error("Can't create user");
+            logger.error("Can't create order");
             if (transaction != null) {
                 transaction.rollback();
             }
@@ -44,43 +37,43 @@ public class UserDaoHibernateImpl implements UserDao {
                 session.close();
             }
         }
-        user.setId(userId);
-        return Optional.ofNullable(user);
+        order.setId(orderId);
+        return Optional.of(order);
     }
 
     @Override
-    public Optional<User> get(Long id) {
-        User user = null;
+    public Optional<Order> get(Long id) {
+        Order order = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            user = session.get(User.class, id);
+            order = session.get(Order.class, id);
         } catch (Exception e) {
-            logger.error("Can't get user");
+            logger.error("Can't get order");
         }
-        return Optional.ofNullable(user);
+        return Optional.ofNullable(order);
     }
 
     @Override
-    public List<User> getAll() {
-        List<User> users = new ArrayList<>();
+    public List<Order> getAll() {
+        List<Order> orders = new ArrayList<>();
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            users = session.createCriteria(User.class).list();
+            orders = session.createCriteria(Order.class).list();
         } catch (Exception e) {
-            logger.error("Can't get users");
+            logger.error("Can't get orders");
         }
-        return users;
+        return orders;
     }
 
     @Override
-    public Optional<User> update(User user) {
+    public Optional<Order> update(Order order) {
         Transaction transaction = null;
         Session session = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             transaction = session.beginTransaction();
-            session.update(user);
+            session.update(order);
             transaction.commit();
         } catch (Exception e) {
-            logger.error("Can't update user");
+            logger.error("Can't update order");
             if (transaction != null) {
                 transaction.rollback();
             }
@@ -89,18 +82,18 @@ public class UserDaoHibernateImpl implements UserDao {
                 session.close();
             }
         }
-        return Optional.ofNullable(user);
+        return Optional.ofNullable(order);
     }
 
     @Override
     public void delete(Long id) {
-        User user = get(id).get();
+        Order order = get(id).get();
         Transaction transaction = null;
         Session session = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             transaction = session.beginTransaction();
-            session.delete(user);
+            session.delete(order);
             transaction.commit();
         } catch (Exception e) {
             logger.error("Can't delete user");
@@ -115,51 +108,38 @@ public class UserDaoHibernateImpl implements UserDao {
     }
 
     @Override
-    public Optional<User> login(String login, String password) throws AuthenticationException {
-        List<User> list = new ArrayList<>();
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            Query query = session.createQuery("from User where login=:login");
-            query.setParameter("login", login);
-            list = query.list();
+    public Optional<Order> deleteByOrder(Order order) {
+        Transaction transaction = null;
+        Session session = null;
+        try {
+            session = HibernateUtil.getSessionFactory().openSession();
+            transaction = session.beginTransaction();
+            session.delete(order);
+            transaction.commit();
         } catch (Exception e) {
-            logger.error("Can't login users");
+            logger.error("Can't delete order");
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        } finally {
+            if (session != null) {
+                session.close();
+            }
         }
-        return list.stream()
-                .filter(u -> u.getPassword()
-                        .equals(HashUtil.hashPassword(password, u.getSalt())))
-                .findFirst();
+        return Optional.ofNullable(order);
     }
 
     @Override
-    public Optional<User> getByToken(String token) {
-        List<User> list = new ArrayList<>();
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            Query query = session.createQuery("from User where token=:token");
-            query.setParameter("token", token);
-            list = query.list();
-        } catch (Exception e) {
-            logger.error("Can't login users");
-        }
-        return list.stream().findFirst();
-    }
-
-    @Override
-    public List<Order> getOrders(Long userId) {
-        List<Order> orders = get(userId).get().getOrders();
-        return orders;
-    }
-
-    @Override
-    public Optional<User> addRole(Long userId, Long roleId) {
+    public Optional<Order> addItem(Long orderId, Long itemId) {
         Transaction transaction = null;
         Session session = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             transaction = session.beginTransaction();
             Query query = session.createSQLQuery(
-                    "INSERT INTO users_roles(user_id, role_id) VALUES(?, ?);");
-            query.setParameter(1, userId);
-            query.setParameter(2, roleId);
+                    "INSERT INTO orders_items(order_id, item_id) VALUES(?, ?);");
+            query.setParameter(1, orderId);
+            query.setParameter(2, itemId);
             query.executeUpdate();
             transaction.commit();
         } catch (Exception e) {
@@ -172,6 +152,6 @@ public class UserDaoHibernateImpl implements UserDao {
                 session.close();
             }
         }
-        return get(userId);
+        return get(orderId);
     }
 }

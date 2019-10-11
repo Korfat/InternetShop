@@ -29,7 +29,7 @@
                 <c:out value="${order.id}" />
             </td>
             <td>
-                <c:out value="${order.userId}" />
+                <c:out value="${order.user.id}" />
             </td>
             <td>
                 <a href="/InternetShop_war_exploded/servlet/deleteOrder?order_id=${order.id}">DEL</a>

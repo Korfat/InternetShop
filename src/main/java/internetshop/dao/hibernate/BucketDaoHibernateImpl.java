@@ -43,7 +43,7 @@ public class BucketDaoHibernateImpl implements BucketDao {
             }
         }
         bucket.setId(bucketId);
-        return Optional.ofNullable(bucket);
+        return Optional.of(bucket);
     }
 
     @Override

@@ -7,9 +7,9 @@ import internetshop.dao.RoleDao;
 import internetshop.dao.UserDao;
 import internetshop.dao.hibernate.BucketDaoHibernateImpl;
 import internetshop.dao.hibernate.ItemDaoHibernateImpl;
+import internetshop.dao.hibernate.OrderDaoHibernateImpl;
 import internetshop.dao.hibernate.RoleDaoHibernateImpl;
 import internetshop.dao.hibernate.UserDaoHibernateImpl;
-import internetshop.dao.jdbc.OrderDaoJdbcImpl;
 import internetshop.service.BucketService;
 import internetshop.service.ItemService;
 import internetshop.service.OrderService;
@@ -103,7 +103,7 @@ public class Factory {
 
     public static OrderDao getOrderDao() {
         if (orderDaoInstanse == null) {
-            orderDaoInstanse = new OrderDaoJdbcImpl(connection);
+            orderDaoInstanse = new OrderDaoHibernateImpl();
         }
         return orderDaoInstanse;
     }

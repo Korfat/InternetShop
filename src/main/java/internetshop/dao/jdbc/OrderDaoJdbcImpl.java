@@ -2,6 +2,7 @@ package internetshop.dao.jdbc;
 
 import internetshop.dao.ItemDao;
 import internetshop.dao.OrderDao;
+import internetshop.dao.UserDao;
 import internetshop.lib.Dao;
 import internetshop.lib.Inject;
 import internetshop.model.Item;
@@ -24,6 +25,8 @@ public class OrderDaoJdbcImpl extends AbstractDao<Order> implements OrderDao {
 
     @Inject
     private static ItemDao itemDao;
+    @Inject
+    private static UserDao userDao;
 
     public OrderDaoJdbcImpl(Connection connection) {
         super(connection);
@@ -34,7 +37,7 @@ public class OrderDaoJdbcImpl extends AbstractDao<Order> implements OrderDao {
         String query = "INSERT INTO `orders` (`user_id`) VALUES (?);";
         try (PreparedStatement preparedStatement
                      = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-            preparedStatement.setLong(1, order.getUserId());
+            preparedStatement.setLong(1, order.getUser().getId());
             preparedStatement.executeUpdate();
             try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
@@ -67,7 +70,7 @@ public class OrderDaoJdbcImpl extends AbstractDao<Order> implements OrderDao {
                 long userId = resultSet.getLong("user_id");
                 long itemId = resultSet.getLong("item_id");
                 order.setId(orderId);
-                order.setUserId(userId);
+                order.setUser(userDao.get(userId).get());
                 Optional<Item> item = itemDao.get(itemId);
                 order.getItems().add(item.get());
             }
@@ -79,7 +82,7 @@ public class OrderDaoJdbcImpl extends AbstractDao<Order> implements OrderDao {
     }
 
     @Override
-    public Optional<List<Order>> getAll() {
+    public List<Order> getAll() {
         String query = "SELECT * FROM orders;";
         List<Order> orders = new ArrayList<>();
         try (PreparedStatement preparedStatement
@@ -90,11 +93,11 @@ public class OrderDaoJdbcImpl extends AbstractDao<Order> implements OrderDao {
                 Order order = get(orderId).get();
                 orders.add(order);
             }
-            return Optional.of(orders);
+            return orders;
         } catch (SQLException e) {
             logger.error("Can't get all orders");
         }
-        return Optional.empty();
+        return null;
     }
 
     @Override
@@ -102,7 +105,7 @@ public class OrderDaoJdbcImpl extends AbstractDao<Order> implements OrderDao {
         String query = "UPDATE orders SET user_id = ? WHERE order_id = ?;";
         try (PreparedStatement preparedStatement
                      = connection.prepareStatement(query)) {
-            preparedStatement.setLong(1, order.getUserId());
+            preparedStatement.setLong(1, order.getUser().getId());
             preparedStatement.setLong(2, order.getId());
             preparedStatement.executeUpdate();
             return Optional.of(order);

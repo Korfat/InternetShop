@@ -26,8 +26,8 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
-    public Optional<List<Order>> getAll() {
-        return Optional.of(Storage.orders);
+    public List<Order> getAll() {
+        return Storage.orders;
     }
 
     @Override
