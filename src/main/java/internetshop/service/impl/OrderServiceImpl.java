@@ -1,6 +1,7 @@
 package internetshop.service.impl;
 
 import internetshop.dao.OrderDao;
+import internetshop.dao.UserDao;
 import internetshop.lib.Inject;
 import internetshop.lib.Service;
 import internetshop.model.Item;
@@ -14,10 +15,14 @@ import java.util.Optional;
 public class OrderServiceImpl implements OrderService {
     @Inject
     private static OrderDao orderDao;
+    @Inject
+    private static UserDao userDao;
 
     @Override
     public Optional<Order> completeOrder(List<Item> items, Long userId) {
-        Order order = new Order(userId, items);
+        Order order = new Order();
+        order.setItems(items);
+        order.setUser(userDao.get(userId).get());
         orderDao.create(order);
         return Optional.of(order);
     }
@@ -33,14 +38,14 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Optional<List<Order>> getAll() {
+    public List<Order> getAll() {
         return orderDao.getAll();
     }
 
     @Override
-    public Optional<List<Item>> getAllItems(Long orderId) {
-        Optional<Order> order = orderDao.get(orderId);
-        return Optional.ofNullable(order.get().getItems());
+    public List<Item> getAllItems(Long orderId) {
+        Optional<Order> order = get(orderId);
+        return order.get().getItems();
     }
 
     @Override

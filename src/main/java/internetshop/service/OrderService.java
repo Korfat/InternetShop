@@ -13,9 +13,9 @@ public interface OrderService {
 
     Optional<Order> get(Long id);
 
-    Optional<List<Order>> getAll();
+    List<Order> getAll();
 
-    Optional<List<Item>> getAllItems(Long orderId);
+    List<Item> getAllItems(Long orderId);
 
     Optional<Order> update(Order order);
 

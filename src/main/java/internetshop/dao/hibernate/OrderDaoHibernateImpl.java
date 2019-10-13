@@ -1,39 +1,35 @@
 package internetshop.dao.hibernate;
 
-import internetshop.dao.BucketDao;
-import internetshop.dao.ItemDao;
+import internetshop.dao.OrderDao;
 import internetshop.lib.Dao;
-import internetshop.lib.Inject;
-import internetshop.model.Bucket;
+import internetshop.model.Order;
 import internetshop.util.HibernateUtil;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.apache.log4j.Logger;
-import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 @Dao
-public class BucketDaoHibernateImpl implements BucketDao {
-    private static Logger logger = Logger.getLogger(BucketDaoHibernateImpl.class);
-
-    @Inject
-    private static ItemDao itemDao;
+public class OrderDaoHibernateImpl implements OrderDao {
+    private static Logger logger = Logger.getLogger(OrderDaoHibernateImpl.class);
 
     @Override
-    public Optional<Bucket> create(Bucket bucket) {
-        Long bucketId = null;
+    public Optional<Order> create(Order order) {
+        Long orderId = null;
         Transaction transaction = null;
         Session session = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             transaction = session.beginTransaction();
-            bucketId = (Long) session.save(bucket);
+            orderId = (Long) session.save(order);
             transaction.commit();
         } catch (Exception e) {
-            logger.error("Can't create bucket");
+            logger.error("Can't create order");
             if (transaction != null) {
                 transaction.rollback();
             }
@@ -42,49 +38,43 @@ public class BucketDaoHibernateImpl implements BucketDao {
                 session.close();
             }
         }
-        bucket.setId(bucketId);
-        return Optional.of(bucket);
+        order.setId(orderId);
+        return Optional.of(order);
     }
 
     @Override
-    public Optional<Bucket> get(Long bucketId) {
+    public Optional<Order> get(Long id) {
+        Order order = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            Query query = session.createQuery("FROM Bucket WHERE bucket_id=:bucketId");
-            query.setParameter("bucketId", bucketId);
-            Optional<Bucket> bucket = query.list().stream().findFirst();
-            if (bucket.isPresent()) {
-                return bucket;
-            }
-        } catch (HibernateException e) {
-            logger.error("Can't get bucket. ", e);
-        }
-        return Optional.empty();
-    }
-
-    @Override
-    public Optional<Bucket> getByUser(Long userId) {
-        Bucket bucket = null;
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            Query query = session.createQuery("FROM Bucket WHERE user_id=:userId");
-            query.setParameter("userId", userId);
-            bucket = (Bucket) query.uniqueResult();
+            order = session.get(Order.class, id);
         } catch (Exception e) {
-            logger.error("Can't get bucket");
+            logger.error("Can't get order");
         }
-        return Optional.ofNullable(bucket);
+        return Optional.ofNullable(order);
     }
 
     @Override
-    public Optional<Bucket> update(Bucket bucket) {
+    public List<Order> getAll() {
+        List<Order> orders = new ArrayList<>();
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            orders = session.createCriteria(Order.class).list();
+        } catch (Exception e) {
+            logger.error("Can't get orders");
+        }
+        return orders;
+    }
+
+    @Override
+    public Optional<Order> update(Order order) {
         Transaction transaction = null;
         Session session = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             transaction = session.beginTransaction();
-            session.update(bucket);
+            session.update(order);
             transaction.commit();
         } catch (Exception e) {
-            logger.error("Can't update bucket");
+            logger.error("Can't update order");
             if (transaction != null) {
                 transaction.rollback();
             }
@@ -93,21 +83,21 @@ public class BucketDaoHibernateImpl implements BucketDao {
                 session.close();
             }
         }
-        return Optional.ofNullable(bucket);
+        return Optional.ofNullable(order);
     }
 
     @Override
     public void delete(Long id) {
-        Bucket bucket = get(id).get();
+        Order order = get(id).get();
         Transaction transaction = null;
         Session session = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             transaction = session.beginTransaction();
-            session.delete(bucket);
+            session.delete(order);
             transaction.commit();
         } catch (Exception e) {
-            logger.error("Can't delete bucket");
+            logger.error("Can't delete order");
             if (transaction != null) {
                 transaction.rollback();
             }
@@ -119,20 +109,42 @@ public class BucketDaoHibernateImpl implements BucketDao {
     }
 
     @Override
-    public Optional<Bucket> addItem(Long bucketId, Long itemId) {
+    public Optional<Order> deleteByOrder(Order order) {
+        Transaction transaction = null;
+        Session session = null;
+        try {
+            session = HibernateUtil.getSessionFactory().openSession();
+            transaction = session.beginTransaction();
+            session.delete(order);
+            transaction.commit();
+        } catch (Exception e) {
+            logger.error("Can't delete order");
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+        return Optional.ofNullable(order);
+    }
+
+    @Override
+    public Optional<Order> addItem(Long orderId, Long itemId) {
         Transaction transaction = null;
         Session session = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             transaction = session.beginTransaction();
             Query query = session.createSQLQuery(
-                    "INSERT INTO buckets_items(bucket_id, item_id) VALUES(?, ?);");
-            query.setParameter(1, bucketId);
+                    "INSERT INTO orders_items(order_id, item_id) VALUES(?, ?);");
+            query.setParameter(1, orderId);
             query.setParameter(2, itemId);
             query.executeUpdate();
             transaction.commit();
         } catch (Exception e) {
-            logger.error("Failed to add the item into the bucket");
+            logger.error("Failed to add the item into the order");
             if (transaction != null) {
                 transaction.rollback();
             }
@@ -141,45 +153,6 @@ public class BucketDaoHibernateImpl implements BucketDao {
                 session.close();
             }
         }
-        return get(bucketId);
-    }
-
-    @Override
-    public Optional<Bucket> deleteItem(Long bucketId, Long itemId) {
-        Transaction transaction = null;
-        Session session = null;
-        try {
-            session = HibernateUtil.getSessionFactory().openSession();
-            transaction = session.beginTransaction();
-            Query query = session.createSQLQuery(
-                    "DELETE FROM buckets_items WHERE bucket_id = ? AND item_id = ?;");
-            query.setParameter(1, bucketId);
-            query.setParameter(2, itemId);
-            query.executeUpdate();
-            transaction.commit();
-        } catch (Exception e) {
-            logger.error("Failed to delete the item into the bucket");
-            if (transaction != null) {
-                transaction.rollback();
-            }
-        } finally {
-            if (session != null) {
-                session.close();
-            }
-        }
-        return get(bucketId);
-    }
-
-    @Override
-    public Optional<Bucket> clear(Long bucketId) {
-        Bucket bucket = null;
-        try {
-            bucket = get(bucketId).get();
-            bucket.clearItems();
-            update(bucket);
-        } catch (Exception e) {
-            logger.error("Can't clear bucket");
-        }
-        return Optional.ofNullable(bucket);
+        return get(orderId);
     }
 }

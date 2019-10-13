@@ -29,7 +29,9 @@ public class CompleteOrderController extends HttpServlet {
         Long userId = (Long) req.getSession(true).getAttribute("userId");
         List<Item> items = new ArrayList<>(bucketService
                 .getAllItems(bucketService.getByUser(userId).get().getId()).get());
-        Order order = new Order(userId, items);
+        Order order = new Order();
+        order.setItems(items);
+        order.setUser(userService.get(userId).get());
         orderService.create(order);
         userService.get(userId).get().getOrders().add(order);
         bucketService.clear(bucketService.getByUser(userId).get().getId());

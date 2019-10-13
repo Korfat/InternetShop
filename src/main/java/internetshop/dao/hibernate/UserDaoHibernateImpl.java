@@ -145,7 +145,8 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public List<Order> getOrders(Long userId) {
-        return null;
+        List<Order> orders = get(userId).get().getOrders();
+        return orders;
     }
 
     @Override
