@@ -97,7 +97,7 @@ public class OrderDaoHibernateImpl implements OrderDao {
             session.delete(order);
             transaction.commit();
         } catch (Exception e) {
-            logger.error("Can't delete user");
+            logger.error("Can't delete order");
             if (transaction != null) {
                 transaction.rollback();
             }
@@ -144,7 +144,7 @@ public class OrderDaoHibernateImpl implements OrderDao {
             query.executeUpdate();
             transaction.commit();
         } catch (Exception e) {
-            logger.error("Failed to add the item into the bucket");
+            logger.error("Failed to add the item into the order");
             if (transaction != null) {
                 transaction.rollback();
             }
