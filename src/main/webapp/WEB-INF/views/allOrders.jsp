@@ -12,37 +12,44 @@
 <html>
 <head>
     <title>All Orders</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        <%@include file="css/style.css" %>
+    </style>
 </head>
 <body>
-<p>Orders:</p>
-
-<table border="2">
-    <tr>
-        <th>ID</th>
-        <th>UserID</th>
-        <th>Delete</th>
-        <th>Show Items</th>
-    </tr>
-    <c:forEach var="order" items="${orders}">
+<div class="container">
+    <h2>Orders</h2>
+    <table class="table-item">
         <tr>
-            <td>
-                <c:out value="${order.id}" />
-            </td>
-            <td>
-                <c:out value="${order.user.id}" />
-            </td>
-            <td>
-                <a href="/InternetShop_war_exploded/servlet/deleteOrder?order_id=${order.id}">DEL</a>
-            </td>
-            <td>
-                <a href="/InternetShop_war_exploded/servlet/getItemsFromOrder?order_id=${order.id}">SHOW</a>
-            </td>
+            <th>ID</th>
+            <th>UserID</th>
+            <th>Delete</th>
+            <th>Show Items</th>
         </tr>
-    </c:forEach>
-</table>
+        <c:forEach var="order" items="${orders}">
+            <tr>
+                <td>
+                    <c:out value="${order.id}"/>
+                </td>
+                <td>
+                    <c:out value="${order.user.id}"/>
+                </td>
+                <td>
+                    <a href="/InternetShop_war_exploded/servlet/deleteOrder?order_id=${order.id}">DEL</a>
+                </td>
+                <td>
+                    <a href="/InternetShop_war_exploded/servlet/getItemsFromOrder?order_id=${order.id}">SHOW</a>
+                </td>
+            </tr>
+        </c:forEach>
+    </table>
 
-<br>
-<a href="/InternetShop_war_exploded/servlet/allItems"><button type="submit" class="registerbtn">All Items</button></a>
-
+    <div class="button-wrap">
+        <a href="/InternetShop_war_exploded/servlet/allItems">
+            <button type="submit" class="registerbtn">All Items</button>
+        </a>
+    </div>
+</div>
 </body>
 </html>

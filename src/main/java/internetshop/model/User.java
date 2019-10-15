@@ -1,7 +1,5 @@
 package internetshop.model;
 
-import internetshop.idgenerator.UserIdGenerator;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -50,7 +48,6 @@ public class User {
     }
 
     public User(String name) {
-        this.id = UserIdGenerator.getGeneratedId();
         orders = new ArrayList<>();
         this.name = name;
     }

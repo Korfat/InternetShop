@@ -1,7 +1,5 @@
 package internetshop.model;
 
-import internetshop.idgenerator.ItemIdGenerator;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -30,7 +28,6 @@ public class Item {
     }
 
     public Item(String name, String model, Double price) {
-        this.id = ItemIdGenerator.getGeneratedId();
         this.name = name;
         this.model = model;
         this.price = price;

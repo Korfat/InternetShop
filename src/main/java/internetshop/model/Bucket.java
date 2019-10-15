@@ -1,7 +1,5 @@
 package internetshop.model;
 
-import internetshop.idgenerator.BucketIdGenerator;
-
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -41,7 +39,6 @@ public class Bucket {
     }
 
     public Bucket(User user) {
-        this.id = BucketIdGenerator.getGeneratedId();
         this.user = user;
         items = new ArrayList<>();
     }

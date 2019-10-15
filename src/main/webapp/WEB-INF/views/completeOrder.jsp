@@ -12,34 +12,48 @@
 <html>
 <head>
     <title>Complete Order</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        <%@include file="css/style.css" %>
+    </style>
 </head>
 <body>
-<p>Items in order:</p>
-
-<table border="2">
-    <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Price</th>
-    </tr>
-    <c:forEach var="item" items="${items}">
+<div class="container">
+    <h2>Items in order</h2>
+    <table class="table-item">
         <tr>
-            <td>
-                <c:out value="${item.id}" />
-            </td>
-            <td>
-                <c:out value="${item.name}" />
-            </td>
-            <td>
-                <c:out value="${item.price}" />
-            </td>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Model</th>
+            <th>Price</th>
         </tr>
-    </c:forEach>
-</table>
-<br>
-<a href="/InternetShop_war_exploded/servlet/allOrders"><button type="submit" class="registerbtn">All Orders</button></a>
-<br>
-<a href="/InternetShop_war_exploded/servlet/allItems"><button type="submit" class="registerbtn">All Items</button></a>
+        <c:forEach var="item" items="${items}">
+            <tr>
+                <td>
+                    <c:out value="${item.id}"/>
+                </td>
+                <td>
+                    <c:out value="${item.name}"/>
+                </td>
+                <td>
+                    <c:out value="${item.model}"/>
+                </td>
+                <td>
+                    <c:out value="${item.price}"/>
+                </td>
+            </tr>
+        </c:forEach>
+    </table>
 
+    <div class="button-wrap">
+        <a href="/InternetShop_war_exploded/servlet/allOrders">
+            <button type="submit" class="registerbtn">All Orders</button>
+        </a>
+        <br>
+        <a href="/InternetShop_war_exploded/servlet/allItems">
+            <button type="submit" class="registerbtn">All Items</button>
+        </a>
+    </div>
+</div>
 </body>
 </html>

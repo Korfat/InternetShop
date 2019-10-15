@@ -12,40 +12,55 @@
 <html>
 <head>
     <title>All Items</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        <%@include file="css/style.css" %>
+    </style>
 </head>
 <body>
-<p>Items:</p>
-
-<table border="2">
-    <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Price</th>
-        <th>Add</th>
-    </tr>
-    <c:forEach var="item" items="${items}">
+<div class="container main-table">
+    <h2>Items</h2>
+    <table class="table-item">
         <tr>
-            <td>
-                <c:out value="${item.id}" />
-            </td>
-            <td>
-                <c:out value="${item.name}" />
-            </td>
-            <td>
-                <c:out value="${item.price}" />
-            </td>
-            <td>
-                <a href="/InternetShop_war_exploded/servlet/addItemToBucket?item_id=${item.id}">ADD</a>
-            </td>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Model</th>
+            <th>Price</th>
+            <th>Add</th>
         </tr>
-    </c:forEach>
-</table>
-<br>
-<a href="/InternetShop_war_exploded/servlet/addItem"><button type="submit" class="registerbtn">New Item</button></a>
-<br>
-<a href="/InternetShop_war_exploded/injectData"><button type="submit" class="registerbtn">Inject Data</button></a>
-<br>
-<a href="/InternetShop_war_exploded/servlet/bucket"><button type="submit" class="registerbtn">Bucket</button></a>
-
+        <c:forEach var="item" items="${items}">
+            <tr>
+                <td>
+                    <c:out value="${item.id}"/>
+                </td>
+                <td>
+                    <c:out value="${item.name}"/>
+                </td>
+                <td>
+                    <c:out value="${item.model}"/>
+                </td>
+                <td>
+                    <c:out value="${item.price}"/>
+                </td>
+                <td>
+                    <a href="/InternetShop_war_exploded/servlet/addItemToBucket?item_id=${item.id}">ADD</a>
+                </td>
+            </tr>
+        </c:forEach>
+    </table>
+    <div class="button-wrap">
+        <a href="/InternetShop_war_exploded/servlet/addItem">
+            <button type="submit" class="registerbtn">New Item</button>
+        </a>
+        <br>
+        <a href="/InternetShop_war_exploded/servlet/bucket">
+            <button type="submit" class="registerbtn">Bucket</button>
+        </a>
+        <br>
+        <a href="/InternetShop_war_exploded/servlet/allOrders">
+            <button type="submit" class="registerbtn">Orders</button>
+        </a>
+    </div>
+</div>
 </body>
 </html>
