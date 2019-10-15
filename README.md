@@ -41,6 +41,6 @@ Write correct path to your log file in resources.log4j.properties.
 
 
 # <a name="authors"></a>Authors
-https://github.com/Korfat
+GitHub: [profile](https://github.com/Korfat)
 
 Telegram: @Korfat
