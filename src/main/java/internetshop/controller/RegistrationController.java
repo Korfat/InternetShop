@@ -5,6 +5,7 @@ import internetshop.model.Bucket;
 import internetshop.model.Role;
 import internetshop.model.User;
 import internetshop.service.BucketService;
+import internetshop.service.RoleService;
 import internetshop.service.UserService;
 
 import java.io.IOException;
@@ -17,11 +18,16 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 public class RegistrationController extends HttpServlet {
+    private static final Long ROLE_USER = 1L;
+
     @Inject
     private static UserService userService;
 
     @Inject
     private static BucketService bucketService;
+
+    @Inject
+    private static RoleService roleService;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -42,9 +48,7 @@ public class RegistrationController extends HttpServlet {
         newUser.setLogin(req.getParameter("login"));
         newUser.setName(req.getParameter("user_name"));
         newUser.setSurname(req.getParameter("user_surname"));
-        Role role = new Role();
-        role.setId(1L);
-        role.setName("USER");
+        Role role = roleService.get(ROLE_USER).get();
         newUser.addRole(role);
         Optional<User> user = userService.create(newUser);
         Bucket newBucket = new Bucket(newUser);

@@ -44,7 +44,7 @@ public class ItemDaoJdbcImpl extends AbstractDao<Item> implements ItemDao {
                 }
             }
         } catch (SQLException e) {
-            logger.error("Can't create order");
+            logger.error("Can't create order", e);
         }
         return Optional.empty();
     }
@@ -69,7 +69,7 @@ public class ItemDaoJdbcImpl extends AbstractDao<Item> implements ItemDao {
             }
             return Optional.of(item);
         } catch (SQLException e) {
-            logger.error("Can't get order");
+            logger.error("Can't get order", e);
         }
         return Optional.empty();
     }
@@ -95,7 +95,7 @@ public class ItemDaoJdbcImpl extends AbstractDao<Item> implements ItemDao {
             }
             return items;
         } catch (SQLException e) {
-            logger.error("Can't get order");
+            logger.error("Can't get order", e);
         }
         return null;
     }
@@ -113,7 +113,7 @@ public class ItemDaoJdbcImpl extends AbstractDao<Item> implements ItemDao {
             preparedStatement.executeUpdate();
             return Optional.of(item);
         } catch (SQLException e) {
-            logger.error("Can't update order");
+            logger.error("Can't update order", e);
         }
         return Optional.empty();
     }
@@ -126,7 +126,7 @@ public class ItemDaoJdbcImpl extends AbstractDao<Item> implements ItemDao {
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            logger.error("Can't delete user");
+            logger.error("Can't delete user", e);
         }
     }
 

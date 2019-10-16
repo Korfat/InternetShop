@@ -47,7 +47,7 @@ public class OrderDaoJdbcImpl extends AbstractDao<Order> implements OrderDao {
                 }
             }
         } catch (SQLException e) {
-            logger.error("Can't create order");
+            logger.error("Can't create order", e);
         }
 
         for (Item item : order.getItems()) {
@@ -76,7 +76,7 @@ public class OrderDaoJdbcImpl extends AbstractDao<Order> implements OrderDao {
             }
             return Optional.of(order);
         } catch (SQLException e) {
-            logger.error("Can't get order");
+            logger.error("Can't get order", e);
         }
         return Optional.empty();
     }
@@ -95,7 +95,7 @@ public class OrderDaoJdbcImpl extends AbstractDao<Order> implements OrderDao {
             }
             return orders;
         } catch (SQLException e) {
-            logger.error("Can't get all orders");
+            logger.error("Can't get all orders", e);
         }
         return null;
     }
@@ -110,7 +110,7 @@ public class OrderDaoJdbcImpl extends AbstractDao<Order> implements OrderDao {
             preparedStatement.executeUpdate();
             return Optional.of(order);
         } catch (SQLException e) {
-            logger.error("Can't update order");
+            logger.error("Can't update order", e);
         }
         return Optional.empty();
     }
@@ -123,7 +123,7 @@ public class OrderDaoJdbcImpl extends AbstractDao<Order> implements OrderDao {
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            logger.error("Can't delete order");
+            logger.error("Can't delete from orders_items", e);
         }
         String query = "DELETE FROM orders WHERE order_id = ?;";
         try (PreparedStatement preparedStatement
@@ -131,7 +131,7 @@ public class OrderDaoJdbcImpl extends AbstractDao<Order> implements OrderDao {
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            logger.error("Can't delete order");
+            logger.error("Can't delete order", e);
         }
     }
 
@@ -149,7 +149,7 @@ public class OrderDaoJdbcImpl extends AbstractDao<Order> implements OrderDao {
             preparedStatement.setLong(2, itemId);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            logger.error("Can't add item");
+            logger.error("Can't add item", e);
         }
         return get(orderId);
     }

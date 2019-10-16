@@ -28,7 +28,7 @@ public class ItemDaoHibernateImpl implements ItemDao {
             itemId = (Long) session.save(item);
             transaction.commit();
         } catch (Exception e) {
-            logger.error("Can't create item");
+            logger.error("Can't create item", e);
             if (transaction != null) {
                 transaction.rollback();
             }
@@ -47,7 +47,7 @@ public class ItemDaoHibernateImpl implements ItemDao {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             item = session.get(Item.class, id);
         } catch (Exception e) {
-            logger.error("Can't get user");
+            logger.error("Can't get user", e);
         }
         return Optional.ofNullable(item);
     }
@@ -58,7 +58,7 @@ public class ItemDaoHibernateImpl implements ItemDao {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             items = session.createCriteria(Item.class).list();
         } catch (Exception e) {
-            logger.error("Can't get user");
+            logger.error("Can't get user", e);
         }
         return items;
     }
@@ -73,7 +73,7 @@ public class ItemDaoHibernateImpl implements ItemDao {
             session.update(item);
             transaction.commit();
         } catch (Exception e) {
-            logger.error("Can't update item");
+            logger.error("Can't update item", e);
             if (transaction != null) {
                 transaction.rollback();
             }
@@ -96,7 +96,7 @@ public class ItemDaoHibernateImpl implements ItemDao {
             session.delete(item);
             transaction.commit();
         } catch (Exception e) {
-            logger.error("Can't delete item");
+            logger.error("Can't delete item", e);
             if (transaction != null) {
                 transaction.rollback();
             }
@@ -117,7 +117,7 @@ public class ItemDaoHibernateImpl implements ItemDao {
             session.delete(item);
             transaction.commit();
         } catch (Exception e) {
-            logger.error("Can't delete item");
+            logger.error("Can't delete item", e);
             if (transaction != null) {
                 transaction.rollback();
             }

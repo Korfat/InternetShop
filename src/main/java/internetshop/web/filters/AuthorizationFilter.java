@@ -93,8 +93,9 @@ public class AuthorizationFilter implements Filter {
         req.getRequestDispatcher("/WEB-INF/views/accessDenied.jsp").forward(req, resp);
     }
 
-    private void processAuthenticated(FilterChain chain,HttpServletRequest req,
-                            HttpServletResponse resp) throws IOException, ServletException {
+    private void processAuthenticated(FilterChain chain, HttpServletRequest req,
+                                      HttpServletResponse resp)
+            throws IOException, ServletException {
         chain.doFilter(req, resp);
     }
 

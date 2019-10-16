@@ -2,13 +2,6 @@
 
 <jsp:useBean id="users" scope="request" type="java.util.List<internetshop.model.User>"/>
 <jsp:useBean id="greeting" scope="request" type="java.lang.String"/>
-<%--
-  Created by IntelliJ IDEA.
-  User: dima3
-  Date: 17.09.2019
-  Time: 14:45
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>

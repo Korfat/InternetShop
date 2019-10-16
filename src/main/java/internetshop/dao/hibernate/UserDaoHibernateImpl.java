@@ -35,7 +35,7 @@ public class UserDaoHibernateImpl implements UserDao {
             userId = (Long) session.save(user);
             transaction.commit();
         } catch (Exception e) {
-            logger.error("Can't create user");
+            logger.error("Can't create user", e);
             if (transaction != null) {
                 transaction.rollback();
             }
@@ -54,7 +54,7 @@ public class UserDaoHibernateImpl implements UserDao {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             user = session.get(User.class, id);
         } catch (Exception e) {
-            logger.error("Can't get user");
+            logger.error("Can't get user", e);
         }
         return Optional.ofNullable(user);
     }
@@ -65,7 +65,7 @@ public class UserDaoHibernateImpl implements UserDao {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             users = session.createCriteria(User.class).list();
         } catch (Exception e) {
-            logger.error("Can't get users");
+            logger.error("Can't get users", e);
         }
         return users;
     }
@@ -80,7 +80,7 @@ public class UserDaoHibernateImpl implements UserDao {
             session.update(user);
             transaction.commit();
         } catch (Exception e) {
-            logger.error("Can't update user");
+            logger.error("Can't update user", e);
             if (transaction != null) {
                 transaction.rollback();
             }
@@ -103,7 +103,7 @@ public class UserDaoHibernateImpl implements UserDao {
             session.delete(user);
             transaction.commit();
         } catch (Exception e) {
-            logger.error("Can't delete user");
+            logger.error("Can't delete user", e);
             if (transaction != null) {
                 transaction.rollback();
             }
@@ -122,7 +122,7 @@ public class UserDaoHibernateImpl implements UserDao {
             query.setParameter("login", login);
             list = query.list();
         } catch (Exception e) {
-            logger.error("Can't login users");
+            logger.error("Can't login users", e);
         }
         return list.stream()
                 .filter(u -> u.getPassword()
@@ -138,7 +138,7 @@ public class UserDaoHibernateImpl implements UserDao {
             query.setParameter("token", token);
             list = query.list();
         } catch (Exception e) {
-            logger.error("Can't login users");
+            logger.error("Can't login users", e);
         }
         return list.stream().findFirst();
     }
@@ -163,7 +163,7 @@ public class UserDaoHibernateImpl implements UserDao {
             query.executeUpdate();
             transaction.commit();
         } catch (Exception e) {
-            logger.error("Failed to add the item into the bucket");
+            logger.error("Failed to add the item into the bucket", e);
             if (transaction != null) {
                 transaction.rollback();
             }

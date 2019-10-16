@@ -13,9 +13,9 @@
     </servlet-mapping>
 
     <servlet>
-    <servlet-name>getAllUsers</servlet-name>
-    <servlet-class>internetshop.controller.GetAllUsersController</servlet-class>
-</servlet>
+        <servlet-name>getAllUsers</servlet-name>
+        <servlet-class>internetshop.controller.GetAllUsersController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>getAllUsers</servlet-name>
         <url-pattern>/servlet/allUsers</url-pattern>
@@ -68,7 +68,7 @@
 
     <servlet>
         <servlet-name>bucket</servlet-name>
-        <servlet-class>internetshop.controller.GetBucketController</servlet-class>
+        <servlet-class>internetshop.controller.GetAllItemsFromBucketController</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>bucket</servlet-name>
@@ -146,7 +146,7 @@
         <servlet-name>logoutController</servlet-name>
         <url-pattern>/logout</url-pattern>
     </servlet-mapping>
-    
+
     <filter>
         <filter-name>auth-filter</filter-name>
         <filter-class>internetshop.web.filters.AuthentikationFilter</filter-class>

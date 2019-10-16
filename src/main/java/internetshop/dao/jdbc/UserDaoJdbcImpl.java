@@ -56,7 +56,7 @@ public class UserDaoJdbcImpl extends AbstractDao<User> implements UserDao {
                 }
             }
         } catch (SQLException e) {
-            logger.error("Can't create order");
+            logger.error("Can't create order", e);
         }
 
         for (Role role : user.getRoles()) {
@@ -90,7 +90,7 @@ public class UserDaoJdbcImpl extends AbstractDao<User> implements UserDao {
             }
             return Optional.of(user);
         } catch (SQLException e) {
-            logger.error("Can't get order");
+            logger.error("Can't get order", e);
         }
         return Optional.empty();
     }
@@ -115,7 +115,7 @@ public class UserDaoJdbcImpl extends AbstractDao<User> implements UserDao {
             }
             return users;
         } catch (SQLException e) {
-            logger.error("Can't get all orders");
+            logger.error("Can't get all orders", e);
         }
         return null;
     }
@@ -134,7 +134,7 @@ public class UserDaoJdbcImpl extends AbstractDao<User> implements UserDao {
             preparedStatement.executeUpdate();
             return Optional.of(user);
         } catch (SQLException e) {
-            logger.error("Can't update order");
+            logger.error("Can't update order", e);
         }
         return Optional.empty();
     }
@@ -152,7 +152,7 @@ public class UserDaoJdbcImpl extends AbstractDao<User> implements UserDao {
                 ordersId.add(orderId);
             }
         } catch (SQLException e) {
-            logger.error("Can't get all orders");
+            logger.error("Can't get all orders", e);
         }
         for (Long orderId : ordersId) {
             orderDao.delete(orderId);
@@ -163,7 +163,7 @@ public class UserDaoJdbcImpl extends AbstractDao<User> implements UserDao {
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            logger.error("Can't delete user");
+            logger.error("Can't delete from users_roles", e);
         }
         String query = "DELETE FROM users WHERE user_id = ?;";
         try (PreparedStatement preparedStatement
@@ -171,7 +171,7 @@ public class UserDaoJdbcImpl extends AbstractDao<User> implements UserDao {
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            logger.error("Can't delete user");
+            logger.error("Can't delete user", e);
         }
     }
 
@@ -192,7 +192,7 @@ public class UserDaoJdbcImpl extends AbstractDao<User> implements UserDao {
                 }
             }
         } catch (SQLException e) {
-            logger.error("Can't delete user");
+            logger.error("Can't delete user", e);
         }
         return Optional.empty();
     }
@@ -211,7 +211,7 @@ public class UserDaoJdbcImpl extends AbstractDao<User> implements UserDao {
                 return user;
             }
         } catch (SQLException e) {
-            logger.error("Can't delete user");
+            logger.error("Can't delete user", e);
         }
         return Optional.empty();
     }
@@ -231,7 +231,7 @@ public class UserDaoJdbcImpl extends AbstractDao<User> implements UserDao {
             }
             return orders;
         } catch (SQLException e) {
-            logger.error("Can't get all orders");
+            logger.error("Can't get all orders", e);
         }
         return null;
     }
@@ -245,7 +245,7 @@ public class UserDaoJdbcImpl extends AbstractDao<User> implements UserDao {
             preparedStatement.setLong(2, roleId);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            logger.error("Can't add role");
+            logger.error("Can't add role", e);
         }
         return get(userId);
     }

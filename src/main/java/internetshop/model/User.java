@@ -36,7 +36,7 @@ public class User {
     private String token;
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(mappedBy = "user", orphanRemoval = true)
-    private List<Order> orders  = new ArrayList<>();
+    private List<Order> orders = new ArrayList<>();
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
