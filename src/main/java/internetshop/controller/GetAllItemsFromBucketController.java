@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class GetBucketController extends HttpServlet {
+public class GetAllItemsFromBucketController extends HttpServlet {
     @Inject
     private static BucketService bucketService;
 

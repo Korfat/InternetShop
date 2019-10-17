@@ -1,50 +1,55 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
-<jsp:useBean id="itemsInBucket" scope="request" type="java.util.List<internetshop.model.Item>"/>
+<jsp:useBean id="users" scope="request" type="java.util.List<internetshop.model.User>"/>
+<jsp:useBean id="greeting" scope="request" type="java.lang.String"/>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Bucket</title>
+    <title>All Users</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
         <%@include file="css/style.css" %>
     </style>
 </head>
 <body>
+
 <div class="container">
-    <h2>Items in bucket</h2>
+    <h2>Users</h2>
     <table class="table-item">
         <tr>
             <th>ID</th>
+            <th>Login</th>
             <th>Name</th>
-            <th>Model</th>
-            <th>Price</th>
+            <th>Surname</th>
             <th>Delete</th>
         </tr>
-        <c:forEach var="item" items="${itemsInBucket}">
+        <c:forEach var="user" items="${users}">
             <tr>
                 <td>
-                    <c:out value="${item.id}"/>
+                    <c:out value="${user.id}"/>
                 </td>
                 <td>
-                    <c:out value="${item.name}"/>
+                    <c:out value="${user.login}"/>
                 </td>
                 <td>
-                    <c:out value="${item.model}"/>
+                    <c:out value="${user.name}"/>
                 </td>
                 <td>
-                    <c:out value="${item.price}"/>
+                    <c:out value="${user.surname}"/>
                 </td>
                 <td>
-                    <a href="/InternetShop_war_exploded/servlet/deleteFromBucket?item_id=${item.id}">DEL</a>
+                    <a href="/InternetShop_war_exploded/servlet/deleteUser?user_id=${user.id}">DELETE</a>
                 </td>
             </tr>
         </c:forEach>
     </table>
-
     <div class="button-wrap">
-        <a href="/InternetShop_war_exploded/servlet/completeOrder">
-            <button type="submit" class="registerbtn">Complete Order</button>
+        <a href="/InternetShop_war_exploded/servlet/addItem">
+            <button type="submit" class="registerbtn">Add Items</button>
+        </a>
+        <br>
+        <a href="/InternetShop_war_exploded/injectData">
+            <button type="submit" class="registerbtn">Inject Data</button>
         </a>
         <br>
         <a href="/InternetShop_war_exploded/servlet/allItems">

@@ -37,7 +37,7 @@ public class RoleDaoJdbcImpl extends AbstractDao<Role> implements RoleDao {
                 }
             }
         } catch (SQLException e) {
-            logger.error("Can't create role");
+            logger.error("Can't create role", e);
         }
         return Optional.empty();
     }
@@ -58,7 +58,7 @@ public class RoleDaoJdbcImpl extends AbstractDao<Role> implements RoleDao {
             }
             return Optional.of(role);
         } catch (SQLException e) {
-            logger.error("Can't get role");
+            logger.error("Can't get role", e);
         }
         return Optional.empty();
     }
@@ -73,7 +73,7 @@ public class RoleDaoJdbcImpl extends AbstractDao<Role> implements RoleDao {
             preparedStatement.executeUpdate();
             return Optional.of(role);
         } catch (SQLException e) {
-            logger.error("Can't update role");
+            logger.error("Can't update role", e);
         }
         return Optional.empty();
     }
@@ -86,7 +86,7 @@ public class RoleDaoJdbcImpl extends AbstractDao<Role> implements RoleDao {
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            logger.error("Can't delete role");
+            logger.error("Can't delete role", e);
         }
     }
 }

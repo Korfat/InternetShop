@@ -1,7 +1,5 @@
 package internetshop.model;
 
-import internetshop.idgenerator.UserIdGenerator;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -38,7 +36,7 @@ public class User {
     private String token;
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(mappedBy = "user", orphanRemoval = true)
-    private List<Order> orders  = new ArrayList<>();
+    private List<Order> orders = new ArrayList<>();
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -50,7 +48,6 @@ public class User {
     }
 
     public User(String name) {
-        this.id = UserIdGenerator.getGeneratedId();
         orders = new ArrayList<>();
         this.name = name;
     }

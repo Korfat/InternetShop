@@ -33,7 +33,7 @@ public class BucketDaoHibernateImpl implements BucketDao {
             bucketId = (Long) session.save(bucket);
             transaction.commit();
         } catch (Exception e) {
-            logger.error("Can't create bucket");
+            logger.error("Can't create bucket", e);
             if (transaction != null) {
                 transaction.rollback();
             }
@@ -69,7 +69,7 @@ public class BucketDaoHibernateImpl implements BucketDao {
             query.setParameter("userId", userId);
             bucket = (Bucket) query.uniqueResult();
         } catch (Exception e) {
-            logger.error("Can't get bucket");
+            logger.error("Can't get bucket", e);
         }
         return Optional.ofNullable(bucket);
     }
@@ -84,7 +84,7 @@ public class BucketDaoHibernateImpl implements BucketDao {
             session.update(bucket);
             transaction.commit();
         } catch (Exception e) {
-            logger.error("Can't update bucket");
+            logger.error("Can't update bucket", e);
             if (transaction != null) {
                 transaction.rollback();
             }
@@ -107,7 +107,7 @@ public class BucketDaoHibernateImpl implements BucketDao {
             session.delete(bucket);
             transaction.commit();
         } catch (Exception e) {
-            logger.error("Can't delete bucket");
+            logger.error("Can't delete bucket", e);
             if (transaction != null) {
                 transaction.rollback();
             }
@@ -132,7 +132,7 @@ public class BucketDaoHibernateImpl implements BucketDao {
             query.executeUpdate();
             transaction.commit();
         } catch (Exception e) {
-            logger.error("Failed to add the item into the bucket");
+            logger.error("Failed to add the item into the bucket", e);
             if (transaction != null) {
                 transaction.rollback();
             }
@@ -158,7 +158,7 @@ public class BucketDaoHibernateImpl implements BucketDao {
             query.executeUpdate();
             transaction.commit();
         } catch (Exception e) {
-            logger.error("Failed to delete the item into the bucket");
+            logger.error("Failed to delete the item into the bucket", e);
             if (transaction != null) {
                 transaction.rollback();
             }
@@ -178,7 +178,7 @@ public class BucketDaoHibernateImpl implements BucketDao {
             bucket.clearItems();
             update(bucket);
         } catch (Exception e) {
-            logger.error("Can't clear bucket");
+            logger.error("Can't clear bucket", e);
         }
         return Optional.ofNullable(bucket);
     }

@@ -26,7 +26,7 @@ public class RoleDaoHibernateImpl implements RoleDao {
             roleId = (Long) session.save(role);
             transaction.commit();
         } catch (Exception e) {
-            logger.error("Can't create role");
+            logger.error("Can't create role", e);
             if (transaction != null) {
                 transaction.rollback();
             }
@@ -46,7 +46,7 @@ public class RoleDaoHibernateImpl implements RoleDao {
             role = session.get(Role.class, id);
             return Optional.of(role);
         } catch (Exception e) {
-            logger.error("Can't get role");
+            logger.error("Can't get role", e);
         }
         return Optional.ofNullable(role);
     }
@@ -61,7 +61,7 @@ public class RoleDaoHibernateImpl implements RoleDao {
             session.update(role);
             transaction.commit();
         } catch (Exception e) {
-            logger.error("Can't update role");
+            logger.error("Can't update role", e);
             if (transaction != null) {
                 transaction.rollback();
             }
@@ -84,7 +84,7 @@ public class RoleDaoHibernateImpl implements RoleDao {
             session.delete(role);
             transaction.commit();
         } catch (Exception e) {
-            logger.error("Can't delete role");
+            logger.error("Can't delete role", e);
             if (transaction != null) {
                 transaction.rollback();
             }
